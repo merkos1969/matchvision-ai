@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V61 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V62 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V61</title>
+  <title>MatchVision AI V62</title>
   <style>
     :root{
       --bg:#06111d;
@@ -356,6 +356,32 @@
       color:var(--muted);font-size:12px;line-height:1.45
     }
     .menu-footer{padding:10px 12px 2px;color:var(--muted);font-size:12px;text-align:center}
+
+    .guide-grid{display:grid;gap:12px}
+    .guide-card{
+      background:linear-gradient(180deg,rgba(18,42,64,.96),rgba(8,28,45,.96));
+      border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;
+      box-shadow:0 12px 30px rgba(0,0,0,.16)
+    }
+    .guide-card h4{margin:0 0 10px;font-size:17px;display:flex;align-items:center;gap:8px}
+    .guide-card p{margin:7px 0;color:var(--muted);line-height:1.55}
+    .guide-step{
+      display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;
+      padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)
+    }
+    .guide-step:last-child{border-bottom:0}
+    .guide-number{
+      width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      background:rgba(55,214,199,.13);border:1px solid rgba(55,214,199,.22);
+      color:var(--accent);font-weight:900
+    }
+    .guide-step b{display:block;margin-bottom:3px}
+    .guide-note{
+      background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.18);
+      color:#f3dfaa;border-radius:14px;padding:12px;line-height:1.5
+    }
+    .guide-mini-list{margin:8px 0 0;padding-left:20px;color:var(--muted);line-height:1.65}
+
     .empty{padding:28px;text-align:center;color:var(--muted);background:var(--panel);border-radius:18px}
 
     .live-card{position:relative;overflow:hidden}
@@ -771,7 +797,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα menu">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V61</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V62</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -934,8 +960,88 @@
     <div id="dailyPicksList"></div>
   </section>
 
+
+  <section id="guideView" class="hidden">
+    <div class="section-title">
+      <h3>Οδηγίες χρήσης</h3>
+      <span>V62</span>
+    </div>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <h4>🚀 Πρώτη ρύθμιση</h4>
+        <div class="guide-step">
+          <span class="guide-number">1</span>
+          <div><b>Άνοιξε τις Ρυθμίσεις</b><p>Πάτησε το μενού επάνω αριστερά και μετά «Ρυθμίσεις».</p></div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-number">2</span>
+          <div><b>Βάλε το API-Football Key</b><p>Επικόλλησε το προσωπικό σου API Key. Αποθηκεύεται μόνο στη συγκεκριμένη συσκευή.</p></div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-number">3</span>
+          <div><b>Ενεργοποίησε τα πραγματικά δεδομένα</b><p>Άνοιξε τον διακόπτη «Χρήση πραγματικών δεδομένων» και πάτησε «Αποθήκευση».</p></div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-number">4</span>
+          <div><b>Έλεγξε τη σύνδεση</b><p>Πάτησε «Δοκιμή σύνδεσης» και μετά «Φόρτωση αγώνων».</p></div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <h4>⚽ Αγώνες και ανάλυση</h4>
+        <p>Στην καρτέλα «Αγώνες» βλέπεις τα παιχνίδια της επιλεγμένης ημέρας σε ώρα Ελλάδας.</p>
+        <ul class="guide-mini-list">
+          <li>Χρησιμοποίησε την αναζήτηση για ομάδα ή πρωτάθλημα.</li>
+          <li>Πάτησε έναν αγώνα για πλήρη ανάλυση.</li>
+          <li>Το ★ αποθηκεύει τον αγώνα στα Αγαπημένα.</li>
+          <li>Οι ώρες εμφανίζονται σε μορφή 24ώρου, π.χ. 21.45.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h4>🎯 Επιλογές ημέρας</h4>
+        <p>Η εφαρμογή αναλύει αυτόματα διαθέσιμους σημερινούς αγώνες και τους χωρίζει σε:</p>
+        <ul class="guide-mini-list">
+          <li>Χαμηλότερο ρίσκο</li>
+          <li>Ρίσκο</li>
+          <li>Έκπληξη</li>
+        </ul>
+        <p>Μπορείς επίσης να αλλάξεις αγορά: 1–Χ–2, Over 0,5, Over 1,5, Over 2,5 και 1ο ημίχρονο Over 0,5.</p>
+      </div>
+
+      <div class="guide-card">
+        <h4>🔴 Live Score και αποτελέσματα</h4>
+        <p>Στο «Live Score» εμφανίζονται οι αγώνες που είναι σε εξέλιξη. Πάτησε έναν αγώνα για επισκόπηση, χρονογραμμή, στατιστικά και συνθέσεις.</p>
+        <p>Στα «Αποτελέσματα» βλέπεις σημερινά ή χθεσινά τελικά αποτελέσματα και μπορείς να συγκρίνεις την προαγωνιστική εκτίμηση.</p>
+      </div>
+
+      <div class="guide-card">
+        <h4>🏆 Βαθμολογίες</h4>
+        <p>Επίλεξε χώρα, πρωτάθλημα και σεζόν. Η εφαρμογή φορτώνει τη διαθέσιμη βαθμολογία από το API.</p>
+        <p>Οι χαμηλότερες κατηγορίες εμφανίζονται μόνο όταν υποστηρίζονται από το API και τη συγκεκριμένη σεζόν.</p>
+      </div>
+
+      <div class="guide-card">
+        <h4>📱 Εγκατάσταση στο κινητό</h4>
+        <p>Άνοιξε την εφαρμογή από Chrome και πάτησε:</p>
+        <p><b>⋮ → Εγκατάσταση εφαρμογής</b> ή <b>Προσθήκη στην αρχική οθόνη</b>.</p>
+        <div class="guide-note">
+          Η εγκατάσταση λειτουργεί όταν η εφαρμογή είναι δημοσιευμένη σε HTTPS, όπως στο GitHub Pages.
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <h4>ℹ️ Σημαντικό</h4>
+        <div class="guide-note">
+          Οι προβλέψεις είναι στατιστικές εκτιμήσεις και δεν αποτελούν εγγύηση αποτελέσματος. Κάθε πλήρης ανάλυση μπορεί να χρησιμοποιεί επιπλέον αίτημα από το ημερήσιο όριο του API.
+        </div>
+      </div>
+    </div>
+  </section>
+
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V38</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V62</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1028,7 +1134,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V61 • GitHub Ready fixed daily picks</div>
+      <div class="drawer-version">V62 • GitHub Ready fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1042,6 +1148,7 @@
 
   <div class="drawer-section-title">Εφαρμογή</div>
   <button data-nav="daily"><span class="nav-icon">🎯</span><span class="nav-label">Επιλογές ημέρας</span></button>
+  <button data-nav="guide"><span class="nav-icon">📘</span><span class="nav-label">Οδηγίες χρήσης</span></button>
   <button data-nav="settings"><span class="nav-icon">⚙</span><span class="nav-label">Ρυθμίσεις</span></button>
 
   <div class="nav-hint">
@@ -1487,7 +1594,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv61_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv62_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!btn || !box) return;
 
@@ -1637,7 +1744,7 @@ async function analyzeFixture(fixtureId){
 
     syncFullAnalysisPanel(fixtureId,match);
 
-    localStorage.setItem(`mv61_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv62_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -3758,7 +3865,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv61_daily_${match.id}`;
+  const key=`mv62_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
@@ -3878,7 +3985,7 @@ async function loadAutomaticDailyPicks(force=false){
 }
 
 function showView(view){
-  ["matchesView","liveView","standingsView","historyView","dailyPicksView","settingsView"].forEach(id=>{
+  ["matchesView","liveView","standingsView","historyView","dailyPicksView","guideView","settingsView"].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.classList.add("hidden");
   });
@@ -3909,6 +4016,7 @@ document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click
     document.querySelector(".daily-tabs")?.scrollTo({left:0,behavior:"auto"});
     loadAutomaticDailyPicks(false);
   }
+  if(target==="guide"){stopLiveAutoRefresh();showView("guideView")}
   if(target==="settings"){stopLiveAutoRefresh();showView("settingsView")}
 }));
 function syncChips(name){document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.filter===name))}

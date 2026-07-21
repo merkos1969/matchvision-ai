@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V61",
+  "name": "MatchVision AI V62",
   "short_name": "MatchVision",
-  "description": "Στατιστικές προβλέψεις και δεδομένα ποδοσφαίρου",
+  "description": "MatchVision AI με ενσωματωμένες οδηγίες χρήσης",
   "lang": "el",
   "dir": "ltr",
   "start_url": "./",
