@@ -1,1 +1,41 @@
-# matchvision-ai
+# MatchVision AI V61
+
+Έκδοση έτοιμη για GitHub Pages.
+
+## Ανέβασμα
+
+1. Δημιούργησε νέο GitHub repository.
+2. Ανέβασε **όλα τα αρχεία αυτού του φακέλου στη ρίζα** του repository.
+3. Άνοιξε **Settings → Pages**.
+4. Στο **Build and deployment** επίλεξε:
+   - Source: `Deploy from a branch`
+   - Branch: `main`
+   - Folder: `/ (root)`
+5. Πάτησε **Save**.
+
+Η σελίδα θα είναι διαθέσιμη στη διεύθυνση που θα εμφανίσει το GitHub Pages.
+
+## Αρχεία
+
+- `index.html`
+- `manifest.webmanifest`
+- `sw.js`
+- `icon.svg`
+- `icon-192.png`
+- `icon-512.png`
+
+## API Key
+
+Το προσωπικό API-Football key **δεν υπάρχει μέσα στον κώδικα** και δεν ανεβαίνει στο GitHub.
+Ο χρήστης το πληκτρολογεί στις Ρυθμίσεις και αποθηκεύεται μόνο στο `localStorage` της συγκεκριμένης συσκευής/browser.
+
+## Εγκατάσταση
+
+Μετά τη δημοσίευση σε HTTPS:
+
+- Chrome Android → μενού `⋮`
+- `Εγκατάσταση εφαρμογής` ή `Προσθήκη στην αρχική οθόνη`
+
+## Σημείωση
+
+Οι προβλέψεις αποτελούν στατιστικές εκτιμήσεις και δεν εγγυώνται αποτέλεσμα.
