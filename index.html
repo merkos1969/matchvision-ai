@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V82 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V83 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V82</title>
+  <title>MatchVision AI V83</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1077,7 +1077,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V82</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V83</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1254,7 +1254,7 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V82</span>
+      <span>V83</span>
     </div>
 
     <div class="guide-grid">
@@ -1316,7 +1316,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V82</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V83</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1402,7 +1402,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V82 • Auto Picks fixed daily picks</div>
+      <div class="drawer-version">V83 • Live Sync fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1527,7 +1527,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv82_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv83_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1546,7 +1546,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv82_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv83_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1955,7 +1955,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv82_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv83_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!box) return;
 
@@ -2113,7 +2113,7 @@ async function analyzeFixture(fixtureId){
     updateQuickPick(match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv82_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv83_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2454,6 +2454,34 @@ async function loadFinishedResults(){
   }
 }
 
+
+function syncOpenLiveDetail(refreshAnalysis=false){
+  if(!currentLiveFixtureId) return;
+
+  const detail=document.getElementById("liveDetail");
+  if(!detail || detail.classList.contains("hidden")) return;
+
+  const match=liveMatches.find(m=>String(m.id)===String(currentLiveFixtureId));
+  if(!match) return;
+
+  document.getElementById("detailMatchTitle").textContent=`${match.home} – ${match.away}`;
+  document.getElementById("detailLeague").textContent=match.league;
+  document.getElementById("detailMinute").textContent=match.minute ? `${match.minute}'` : "LIVE";
+  document.getElementById("detailStatus").textContent=translateMatchStatus(match.status);
+  document.getElementById("detailHome").textContent=match.home;
+  document.getElementById("detailAway").textContent=match.away;
+  document.getElementById("detailScore").textContent=`${match.hs} - ${match.as}`;
+
+  renderDetailOverview(match);
+  renderDetailTimeline(match);
+  renderDetailStats(match);
+  renderDetailLineups(match);
+
+  if(refreshAnalysis && settings.realData){
+    enrichLiveMatch(currentLiveFixtureId);
+  }
+}
+
 async function loadLiveFromApi(){
   try{
     setApiStatus("Ανανέωση Live Score…","loading");
@@ -2461,6 +2489,7 @@ async function loadLiveFromApi(){
     liveMatches=(data.response||[]).map(mapLive);
     localStorage.setItem("mv40_live_matches", JSON.stringify(liveMatches));
     renderLive();
+    syncOpenLiveDetail(true);
     setApiStatus(liveMatches.length?`${liveMatches.length} αγώνες είναι Live`:"Δεν υπάρχουν Live αγώνες τώρα","ok");
   }catch(err){
     setApiStatus(err.message,"error");
@@ -2552,7 +2581,7 @@ function startLiveAutoRefresh(){
       if(!document.getElementById("liveView").classList.contains("hidden")){
         loadLiveFromApi();
       }
-    },60000);
+    },20000);
   }
 }
 
@@ -3800,7 +3829,7 @@ function renderLive(){
           ${leagueLogo ? `<img class="live-league-logo" src="${leagueLogo}" alt="">` : ""}
           <div>
             <div>${league}</div>
-            <small>Live παιχνίδια σε εξέλιξη</small>
+            <small>Live παιχνίδια • αυτόματη ανανέωση 20΄΄</small>
           </div>
         </div>
         <div class="live-count">${items.length}</div>
@@ -4466,7 +4495,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv82_daily_${match.id}`;
+  const key=`mv83_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
