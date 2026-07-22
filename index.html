@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V84 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V85 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V84</title>
+  <title>MatchVision AI V85</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1100,7 +1100,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V84</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V85</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1147,7 +1147,13 @@
   </section>
 
 
-  <section id="liveView" class="hidden">
+  
+      <div class="status ok" style="margin:12px 0">
+        <span class="dot"></span>
+        Εξοικονόμηση αιτημάτων ενεργή: Live ανά 60΄΄ και στατιστικά μόνο κατόπιν επιλογής.
+      </div>
+
+<section id="liveView" class="hidden">
     <div class="section-title">
       <h3>Live Score</h3>
       <button class="small-btn" id="refreshLive">Ανανέωση</button>
@@ -1221,7 +1227,7 @@
     </div>
     <div class="api-status" id="resultsStatus"><i class="api-dot"></i><span>Δεν έχουν φορτωθεί αποτελέσματα</span></div>
     <div class="hint" style="margin:8px 2px 12px">
-      Πάτησε «Ανάλυση και στατιστικά αγώνα» για να δεις την προαγωνιστική εκτίμηση και αν επιβεβαιώθηκε.
+      Η ανάλυση φορτώνεται μόνο όταν πατήσεις τον συγκεκριμένο αγώνα, ώστε να αποφεύγονται περιττά αιτήματα.
     </div>
     <div id="historyList" class="match-list" style="margin-top:12px"></div>
   </section>
@@ -1425,7 +1431,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V84 • Clean Timeline fixed daily picks</div>
+      <div class="drawer-version">V85 • Request Optimized fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1550,7 +1556,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv84_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv85_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1569,7 +1575,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv84_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv85_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1978,7 +1984,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv84_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv85_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!box) return;
 
@@ -2136,7 +2142,7 @@ async function analyzeFixture(fixtureId){
     updateQuickPick(match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv84_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv85_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2512,7 +2518,7 @@ async function loadLiveFromApi(){
     liveMatches=(data.response||[]).map(mapLive);
     localStorage.setItem("mv40_live_matches", JSON.stringify(liveMatches));
     renderLive();
-    syncOpenLiveDetail(true);
+    syncOpenLiveDetail(false);
     setApiStatus(liveMatches.length?`${liveMatches.length} αγώνες είναι Live`:"Δεν υπάρχουν Live αγώνες τώρα","ok");
   }catch(err){
     setApiStatus(err.message,"error");
@@ -2604,7 +2610,7 @@ function startLiveAutoRefresh(){
       if(!document.getElementById("liveView").classList.contains("hidden")){
         loadLiveFromApi();
       }
-    },20000);
+    },60000);
   }
 }
 
@@ -2776,7 +2782,7 @@ async function runAutomaticPredictionQueue(){
       try{
         await analyzeFixture(Number(id));
       }catch(error){}
-      await wait(900);
+      await wait(1800);
     }
   }
 
@@ -2799,8 +2805,16 @@ function observeAutomaticPredictions(){
     threshold:0.01
   });
 
-  document.querySelectorAll("[data-auto-prediction]").forEach(card=>{
-    autoPredictionObserver.observe(card);
+  document.querySelectorAll("[data-auto-prediction]").forEach((card,index)=>{
+    if(index<5) autoPredictionObserver.observe(card);
+    else{
+      const id=card.dataset.autoPrediction;
+      const quick=document.getElementById(`quick-pick-${id}`);
+      if(quick && quick.classList.contains("auto-pick-loading")){
+        quick.querySelector("b").textContent="Πάτησε";
+        quick.querySelector("span").textContent="Για προγνωστικό";
+      }
+    }
   });
 }
 
@@ -3769,6 +3783,53 @@ function statValue(stats,name){
   return typeof v==="string" ? parseFloat(v.replace("%","")) : Number(v);
 }
 
+
+async function ensureLiveStatsLoaded(){
+  if(!currentLiveFixtureId) return;
+  const match=liveMatches.find(m=>String(m.id)===String(currentLiveFixtureId));
+  if(!match) return;
+
+  match.raw=match.raw||{};
+  if(Array.isArray(match.raw.statistics) && match.raw.statistics.length){
+    renderDetailStats(match);
+    return;
+  }
+
+  const el=document.getElementById("detail-stats");
+  if(el) el.innerHTML='<div class="api-status loading"><i class="api-dot"></i><span>Φόρτωση στατιστικών…</span></div>';
+
+  try{
+    const data=await apiFetch(`/fixtures/statistics?fixture=${currentLiveFixtureId}`);
+    match.raw.statistics=data.response||[];
+    renderDetailStats(match);
+  }catch(err){
+    if(el) el.innerHTML=`<div class="api-status error"><i class="api-dot"></i><span>${err.message}</span></div>`;
+  }
+}
+
+async function ensureLiveLineupsLoaded(){
+  if(!currentLiveFixtureId) return;
+  const match=liveMatches.find(m=>String(m.id)===String(currentLiveFixtureId));
+  if(!match) return;
+
+  match.raw=match.raw||{};
+  if(Array.isArray(match.raw.lineups) && match.raw.lineups.length){
+    renderDetailLineups(match);
+    return;
+  }
+
+  const el=document.getElementById("detail-lineups");
+  if(el) el.innerHTML='<div class="api-status loading"><i class="api-dot"></i><span>Φόρτωση συνθέσεων…</span></div>';
+
+  try{
+    const data=await apiFetch(`/fixtures/lineups?fixture=${currentLiveFixtureId}`);
+    match.raw.lineups=data.response||[];
+    renderDetailLineups(match);
+  }catch(err){
+    if(el) el.innerHTML=`<div class="api-status error"><i class="api-dot"></i><span>${err.message}</span></div>`;
+  }
+}
+
 function renderDetailStats(match){
   const stats=match.raw?.statistics||[];
   const home=stats[0]?.statistics||[];
@@ -3821,51 +3882,23 @@ async function enrichLiveMatch(fixtureId){
 
   const overview=document.getElementById("detail-overview");
   if(overview){
-    overview.innerHTML='<div class="api-status loading"><i class="api-dot"></i><span>Φόρτωση live ανάλυσης…</span></div>';
+    overview.innerHTML='<div class="api-status loading"><i class="api-dot"></i><span>Φόρτωση χρονογραμμής…</span></div>';
   }
 
   match.raw=match.raw||{};
-  const errors=[];
 
   try{
     const eventsData=await apiFetch(`/fixtures/events?fixture=${fixtureId}`);
     match.raw.events=eventsData.response||[];
   }catch(err){
-    errors.push(`Χρονογραμμή: ${err.message}`);
     match.raw.events=[];
-  }
-
-  await wait(450);
-
-  try{
-    const statsData=await apiFetch(`/fixtures/statistics?fixture=${fixtureId}`);
-    match.raw.statistics=statsData.response||[];
-  }catch(err){
-    errors.push(`Στατιστικά: ${err.message}`);
-    match.raw.statistics=[];
-  }
-
-  await wait(450);
-
-  try{
-    const lineupsData=await apiFetch(`/fixtures/lineups?fixture=${fixtureId}`);
-    match.raw.lineups=lineupsData.response||[];
-  }catch(err){
-    errors.push(`Συνθέσεις: ${err.message}`);
-    match.raw.lineups=[];
+    if(overview){
+      overview.innerHTML=`<div class="api-status error"><i class="api-dot"></i><span>Χρονογραμμή: ${err.message}</span></div>`;
+    }
   }
 
   renderDetailOverview(match);
   renderDetailTimeline(match);
-  renderDetailStats(match);
-  renderDetailLineups(match);
-
-  if(errors.length && overview){
-    overview.insertAdjacentHTML(
-      "beforeend",
-      `<div class="api-status error" style="margin-top:12px"><i class="api-dot"></i><span>${errors.join(" • ")}</span></div>`
-    );
-  }
 }
 
 function openLiveDetail(fixtureId){
@@ -3920,7 +3953,7 @@ function renderLive(){
           ${leagueLogo ? `<img class="live-league-logo" src="${leagueLogo}" alt="">` : ""}
           <div>
             <div>${league}</div>
-            <small>Live παιχνίδια • αυτόματη ανανέωση 20΄΄</small>
+            <small>Live παιχνίδια • αυτόματη ανανέωση 60΄΄</small>
           </div>
         </div>
         <div class="live-count">${items.length}</div>
@@ -4586,7 +4619,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv84_daily_${match.id}`;
+  const key=`mv85_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
@@ -4865,5 +4898,12 @@ document.getElementById("refreshDailyPicks")?.addEventListener("click",()=>{
 
 updateDailyDateHeader();
 init();
+document.addEventListener("click",event=>{
+  const btn=event.target.closest(".detail-tab");
+  if(!btn) return;
+  const target=btn.dataset.detailTab;
+  if(target==="stats") ensureLiveStatsLoaded();
+  if(target==="lineups") ensureLiveLineupsLoaded();
+});
 </script></body>
 </html>

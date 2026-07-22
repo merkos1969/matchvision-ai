@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V84 Clean Timeline",
+  "name": "MatchVision AI V85 Request Optimized",
   "short_name": "MatchVision",
-  "description": "Καθαρότερη Live χρονογραμμή με προτεραιότητα σε γκολ και κάρτες",
+  "description": "Μειωμένα API αιτήματα με on-demand Live στατιστικά",
   "lang": "el",
   "start_url": "./",
   "scope": "./",
