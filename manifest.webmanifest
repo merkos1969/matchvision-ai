@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V79 Stable",
+  "name": "MatchVision AI V80 Stable",
   "short_name": "MatchVision",
-  "description": "Σταθερότερη δημόσια έκδοση με περιορισμό αιτημάτων και fallback cache",
+  "description": "Διόρθωση παλιάς cache και αυτόματη φόρτωση σημερινών αγώνων",
   "lang": "el",
   "start_url": "./",
   "scope": "./",

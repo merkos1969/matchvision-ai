@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V79 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V80 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V79</title>
+  <title>MatchVision AI V80</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1025,7 +1025,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V79</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V80</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1202,7 +1202,7 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V79</span>
+      <span>V80</span>
     </div>
 
     <div class="guide-grid">
@@ -1264,7 +1264,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V79</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V80</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1350,7 +1350,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V79 • Stable fixed daily picks</div>
+      <div class="drawer-version">V80 • Stable fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1475,7 +1475,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv79_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv80_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1494,7 +1494,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv79_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv80_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1903,7 +1903,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv79_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv80_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!btn || !box) return;
 
@@ -2055,7 +2055,7 @@ async function analyzeFixture(fixtureId){
     syncFullAnalysisPanel(fixtureId,match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv79_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv80_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2114,14 +2114,20 @@ async function loadDateFromApi(date){
     setApiStatus(real.length?`${real.length} πραγματικοί αγώνες φορτώθηκαν`:"Δεν βρέθηκαν αγώνες για την επιλεγμένη ημέρα","ok");
   }catch(err){
     const cached=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
-    if(Array.isArray(cached) && cached.length){
+    const cachedDate=localStorage.getItem("mv40_real_matches_date");
+
+    if(cachedDate===date && Array.isArray(cached) && cached.length){
       matches=cached.map(normalizeCachedMatch);
+      selectedApiDate=date;
+      syncDayFiltersFromDate(date);
       populateLeagues();
       render();
-      setApiStatus("Εμφανίζονται τα τελευταία αποθηκευμένα παιχνίδια. Η νέα ενημέρωση θα γίνει σε λίγο.","ok");
+      setApiStatus("Εμφανίζονται οι αποθηκευμένοι αγώνες της ημέρας. Η ενημέρωση θα δοκιμαστεί ξανά αργότερα.","ok");
     }else{
-      setApiStatus(err.message,"error");
+      matches=[];
+      populateLeagues();
       render();
+      setApiStatus(err.message,"error");
     }
   }
 }
@@ -2397,7 +2403,8 @@ async function loadLiveFromApi(){
 function populateLeagues(){
   const select=document.getElementById("leagueFilter");
   const current=select.value;
-  const leagues=[...new Set(matches.map(m=>m.league))].sort();
+  const visibleSource=matches.filter(m=>m.realData);
+  const leagues=[...new Set(visibleSource.map(m=>m.league))].sort();
   select.innerHTML='<option value="all">Όλα τα πρωταθλήματα</option>'+leagues.map(x=>`<option>${x}</option>`).join("");
   if([...select.options].some(o=>o.value===current))select.value=current;
 }
@@ -2507,11 +2514,17 @@ function init(){
   if(cachedDate) selectedApiDate=cachedDate;
   const today=new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Athens"});
   const cachedMatches=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
-  if(settings.realData && Array.isArray(cachedMatches) && cachedMatches.length){
+  const hasTodayCache=settings.realData &&
+    cachedDate===today &&
+    Array.isArray(cachedMatches) &&
+    cachedMatches.length;
+
+  if(hasTodayCache){
     matches=cachedMatches.map(normalizeCachedMatch);
-    if(cachedDate!==today){
-      selectedApiDate=today;
-    }
+    selectedApiDate=today;
+  }else{
+    matches=[];
+    selectedApiDate=today;
   }
 
   const cachedLive=JSON.parse(localStorage.getItem("mv40_live_matches") || "null");
@@ -2537,8 +2550,10 @@ function init(){
   renderLeagueChoices();
   renderStandings([]);
   if(settings.realData){
-    const hasReal=Array.isArray(matches) && matches.some(m=>m.realData);
-    if(!hasReal) setTimeout(loadTodayFromApi,300);
+    if(!hasTodayCache){
+      setApiStatus("Φόρτωση σημερινών αγώνων…","loading");
+      setTimeout(loadTodayFromApi,300);
+    }
   }
 }
 
@@ -2608,8 +2623,10 @@ function render(){
     currentFilter==="high"?"Υψηλή αξιοπιστία":
     currentFilter==="tomorrow"?"Αγώνες αύριο":"Αγώνες ημέρας";
   if(!data.length){
+    const statusText=document.getElementById("apiStatus")?.textContent||"";
+    const loading=statusText.includes("Φόρτωση");
     list.innerHTML=settings.realData
-      ? '<div class="empty">Δεν βρέθηκαν διαθέσιμοι αγώνες για τα επιλεγμένα φίλτρα.</div>'
+      ? `<div class="empty">${loading ? "Γίνεται φόρτωση των σημερινών αγώνων…" : "Δεν βρέθηκαν διαθέσιμοι αγώνες για τα επιλεγμένα φίλτρα."}</div>`
       : '<div class="empty">Δεν υπάρχουν αγώνες με αυτά τα φίλτρα.</div>';
     return;
   }
@@ -4277,7 +4294,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv79_daily_${match.id}`;
+  const key=`mv80_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
