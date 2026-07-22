@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V80 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V82 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V80</title>
+  <title>MatchVision AI V82</title>
   <style>
     :root{
       --bg:#06111d;
@@ -510,6 +510,58 @@
     .bottom-nav button[data-bottom-nav="history"]{display:none!important}
     body{padding-bottom:72px!important}
     .drawer-hint{display:none!important}
+
+
+    .compact-match{
+      display:grid!important;
+      grid-template-columns:minmax(0,1fr) 132px!important;
+      gap:10px!important;
+      align-items:center!important;
+      padding:13px!important;
+      cursor:pointer;
+      position:relative;
+    }
+    .compact-main{min-width:0}
+    .compact-side{
+      display:grid!important;
+      grid-template-columns:1fr!important;
+      align-items:center!important;
+      justify-items:stretch!important;
+      gap:7px!important;
+    }
+    .compact-side .fav{
+      position:absolute!important;
+      top:10px!important;
+      right:10px!important;
+      z-index:2!important;
+    }
+    .compact-pick{
+      display:grid!important;
+      min-height:74px!important;
+      align-content:center!important;
+      min-width:0!important;
+      width:100%!important;
+      padding:10px 7px!important;
+      border-radius:15px!important;
+      background:linear-gradient(135deg,rgba(55,214,199,.16),rgba(45,156,197,.10))!important;
+    }
+    .compact-pick b{
+      font-size:15px!important;
+      line-height:1.18!important;
+      white-space:normal!important;
+    }
+    .compact-pick span{
+      font-size:10px!important;
+      line-height:1.25!important;
+    }
+    .compact-probs,.compact-actions{display:none!important}
+    .auto-pick-loading b{color:var(--muted)!important}
+    .auto-pick-error b{color:var(--warning)!important}
+    .compact-match .panel{grid-column:1/-1}
+    @media(max-width:420px){
+      .compact-match{grid-template-columns:minmax(0,1fr) 116px!important}
+      .compact-pick b{font-size:14px!important}
+    }
 
     .analysis-note{
       margin-top:12px;padding:12px 13px;border-radius:14px;
@@ -1025,7 +1077,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V80</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V82</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1202,14 +1254,14 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V80</span>
+      <span>V82</span>
     </div>
 
     <div class="guide-grid">
       <div class="guide-card">
         <h4>🚀 Πώς ξεκινάς</h4>
         <p>Άνοιξε την εφαρμογή και επίλεξε «Σήμερα» ή «Αύριο» για να δεις τους διαθέσιμους αγώνες.</p>
-        <p>Πάτησε «Ανάλυση αγώνα» για να εμφανιστούν η προτεινόμενη κατεύθυνση, οι πιθανότητες και τα διαθέσιμα στατιστικά.</p>
+        <p>Οι αγώνες εμφανίζονται σε λίστα και το προγνωστικό φορτώνεται αυτόματα δίπλα σε κάθε παιχνίδι. Πάτησε την κάρτα μόνο για περισσότερες λεπτομέρειες.</p>
       </div>
       <div class="guide-card">
         <h4>⚽ Αγώνες και ανάλυση</h4>
@@ -1264,7 +1316,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V80</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V82</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1350,7 +1402,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V80 • Stable fixed daily picks</div>
+      <div class="drawer-version">V82 • Auto Picks fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1475,7 +1527,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv80_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv82_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1494,7 +1546,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv80_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv82_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1903,9 +1955,9 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv80_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv82_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
-  if(!btn || !box) return;
+  if(!box) return;
 
   if(cached){
     const age=Date.now()-cached.savedAt;
@@ -1913,8 +1965,10 @@ async function analyzeFixture(fixtureId){
       const match=matches.find(m=>String(m.id)===String(fixtureId));
       applyAnalysisModelToMatch(match,cached.model);
       box.innerHTML=cached.html;
-      btn.textContent="✓ Αποθηκευμένη ανάλυση";
-      btn.disabled=true;
+      if(btn){
+        btn.textContent="✓ Αποθηκευμένη ανάλυση";
+        btn.disabled=true;
+      }
 
       const article=btn.closest('.match');
       const summary=article?.querySelector('.recommend');
@@ -1929,12 +1983,15 @@ async function analyzeFixture(fixtureId){
         probs[2].textContent=match.p[2]+'%';
       }
       syncFullAnalysisPanel(fixtureId,match);
+      updateQuickPick(match);
       return;
     }
   }
 
-  btn.disabled=true;
-  btn.innerHTML='<span class="loader"></span> Φόρτωση ανάλυσης…';
+  if(btn){
+    btn.disabled=true;
+    btn.innerHTML='<span class="loader"></span> Φόρτωση ανάλυσης…';
+  }
   box.innerHTML="";
 
   try{
@@ -2040,7 +2097,7 @@ async function analyzeFixture(fixtureId){
       </div>`;
 
     // Update summary visible on card without destroying loaded analysis
-    const article=btn.closest(".match");
+    const article=btn?.closest(".match") || document.querySelector(`[data-auto-prediction="${fixtureId}"]`);
     const summary=article?.querySelector(".recommend");
     if(summary){
       summary.innerHTML=`<div>Κύρια εκτίμηση: <strong>${pickCode ? `${pickCode} — ` : ""}${pick}</strong></div><div class="risk">${quality.key==="none" ? "Μη επαρκή δεδομένα" : quality.key==="limited" ? "Περιορισμένα δεδομένα" : `${maxp}% υψηλότερη πιθανότητα`}</div>`;
@@ -2053,9 +2110,10 @@ async function analyzeFixture(fixtureId){
     }
 
     syncFullAnalysisPanel(fixtureId,match);
+    updateQuickPick(match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv80_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv82_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2073,11 +2131,20 @@ async function analyzeFixture(fixtureId){
         aform:match.aform
       } : null
     }));
-    btn.textContent="✓ Η ανάλυση φορτώθηκε";
+    if(btn) btn.textContent="✓ Η ανάλυση φορτώθηκε";
   }catch(err){
     box.innerHTML=`<div class="api-status error"><i class="api-dot"></i><span>${err.message}</span></div>`;
-    btn.disabled=false;
-    btn.textContent="Ξανά προσπάθεια ανάλυσης";
+    if(btn){
+      btn.disabled=false;
+      btn.textContent="Ξανά προσπάθεια ανάλυσης";
+    }
+    const quick=document.getElementById(`quick-pick-${fixtureId}`);
+    if(quick){
+      quick.classList.remove("auto-pick-loading");
+      quick.classList.add("auto-pick-error");
+      quick.querySelector("b").textContent="Μη διαθέσιμο";
+      quick.querySelector("span").textContent="Πάτησε για δοκιμή";
+    }
   }
 }
 
@@ -2614,6 +2681,77 @@ function hasAnyFullAnalysis(match){
 
 
 
+
+let autoPredictionObserver=null;
+let autoPredictionQueue=[];
+let autoPredictionBusy=false;
+const autoPredictionQueued=new Set();
+
+function updateQuickPick(match){
+  if(!match) return;
+  const quick=document.getElementById(`quick-pick-${match.id}`);
+  if(!quick) return;
+
+  quick.classList.remove("auto-pick-loading","auto-pick-error");
+  const title=quick.querySelector("b");
+  const subtitle=quick.querySelector("span");
+  const best=hasPrediction(match) ? Math.max(...match.p) : null;
+
+  if(title) title.textContent=match.pick||"—";
+  if(subtitle) subtitle.textContent=
+    Number.isFinite(best) ? `${best}% • ${match.confidence||best}% εμπιστοσύνη` : "Δες την ανάλυση";
+}
+
+function queueAutomaticPrediction(fixtureId){
+  const id=String(fixtureId);
+  const match=matches.find(m=>String(m.id)===id);
+  if(!match || hasPrediction(match) || autoPredictionQueued.has(id)) return;
+
+  autoPredictionQueued.add(id);
+  autoPredictionQueue.push(id);
+  runAutomaticPredictionQueue();
+}
+
+async function runAutomaticPredictionQueue(){
+  if(autoPredictionBusy) return;
+  autoPredictionBusy=true;
+
+  while(autoPredictionQueue.length){
+    const id=autoPredictionQueue.shift();
+    const match=matches.find(m=>String(m.id)===String(id));
+
+    if(match && !hasPrediction(match)){
+      try{
+        await analyzeFixture(Number(id));
+      }catch(error){}
+      await wait(900);
+    }
+  }
+
+  autoPredictionBusy=false;
+}
+
+function observeAutomaticPredictions(){
+  autoPredictionObserver?.disconnect();
+
+  autoPredictionObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      const id=entry.target.dataset.autoPrediction;
+      queueAutomaticPrediction(id);
+      autoPredictionObserver.unobserve(entry.target);
+    });
+  },{
+    root:null,
+    rootMargin:"220px 0px",
+    threshold:0.01
+  });
+
+  document.querySelectorAll("[data-auto-prediction]").forEach(card=>{
+    autoPredictionObserver.observe(card);
+  });
+}
+
 function render(){
   const list=document.getElementById("matchList");
   const data=filteredMatches();
@@ -2636,7 +2774,7 @@ function render(){
     const confidenceText=ready ? `${m.confidence}% αξιοπιστία` : "Πάτησε για ανάλυση";
     const strongestText=ready ? `${bestProb}%` : "—";
     return `
-    <article class="match compact-match">
+    <article class="match compact-match" data-auto-prediction="${m.id}" onclick="openPracticalAnalysis(${m.id})">
       <div class="compact-main">
         <div class="compact-league">${m.leagueLogo?`<img class="league-logo" src="${m.leagueLogo}" alt="">`:""}${m.league}</div>
         <div class="compact-team">${m.logoHome?`<img class="team-logo" src="${m.logoHome}" alt="">`:""}${m.home}</div>
@@ -2645,10 +2783,15 @@ function render(){
       </div>
 
       <div class="compact-side">
-        <button class="fav ${favorites.includes(m.id)?'on':''}" onclick="toggleFav(${m.id})">★</button>
-        <button class="compact-pick" type="button" onclick="toggleDetails(${m.id})">
-          <b>${ready?(m.pick||"—"):"Άνοιγμα"}</b>
-          <span>${ready?confidenceText:"Για πλήρη ανάλυση"}</span>
+        <button class="fav ${favorites.includes(m.id)?'on':''}" onclick="event.stopPropagation();toggleFav(${m.id})">★</button>
+        <button
+          class="compact-pick ${ready ? "" : "auto-pick-loading"}"
+          id="quick-pick-${m.id}"
+          type="button"
+          onclick="event.stopPropagation();openPracticalAnalysis(${m.id})"
+        >
+          <b>${ready?(m.pick||"—"):"Φόρτωση…"}</b>
+          <span>${ready?confidenceText:"Αυτόματο προγνωστικό"}</span>
         </button>
       </div>
 
@@ -2740,6 +2883,7 @@ function render(){
       </div>
     </article>`;
   }).join("");
+  requestAnimationFrame(observeAutomaticPredictions);
 }
 
 
@@ -3555,24 +3699,52 @@ async function enrichLiveMatch(fixtureId){
   const match=liveMatches.find(m=>String(m.id)===String(fixtureId));
   if(!match) return;
 
+  const overview=document.getElementById("detail-overview");
+  if(overview){
+    overview.innerHTML='<div class="api-status loading"><i class="api-dot"></i><span>Φόρτωση live ανάλυσης…</span></div>';
+  }
+
+  match.raw=match.raw||{};
+  const errors=[];
+
   try{
-    const [eventsData,statsData,lineupsData]=await Promise.all([
-      apiFetch(`/fixtures/events?fixture=${fixtureId}`),
-      apiFetch(`/fixtures/statistics?fixture=${fixtureId}`),
-      apiFetch(`/fixtures/lineups?fixture=${fixtureId}`)
-    ]);
-
-    match.raw=match.raw||{};
+    const eventsData=await apiFetch(`/fixtures/events?fixture=${fixtureId}`);
     match.raw.events=eventsData.response||[];
-    match.raw.statistics=statsData.response||[];
-    match.raw.lineups=lineupsData.response||[];
-
-    renderDetailOverview(match);
-    renderDetailTimeline(match);
-    renderDetailStats(match);
-    renderDetailLineups(match);
   }catch(err){
-    document.getElementById("detail-overview").innerHTML=`<div class="api-status error"><i class="api-dot"></i><span>${err.message}</span></div>`;
+    errors.push(`Χρονογραμμή: ${err.message}`);
+    match.raw.events=[];
+  }
+
+  await wait(450);
+
+  try{
+    const statsData=await apiFetch(`/fixtures/statistics?fixture=${fixtureId}`);
+    match.raw.statistics=statsData.response||[];
+  }catch(err){
+    errors.push(`Στατιστικά: ${err.message}`);
+    match.raw.statistics=[];
+  }
+
+  await wait(450);
+
+  try{
+    const lineupsData=await apiFetch(`/fixtures/lineups?fixture=${fixtureId}`);
+    match.raw.lineups=lineupsData.response||[];
+  }catch(err){
+    errors.push(`Συνθέσεις: ${err.message}`);
+    match.raw.lineups=[];
+  }
+
+  renderDetailOverview(match);
+  renderDetailTimeline(match);
+  renderDetailStats(match);
+  renderDetailLineups(match);
+
+  if(errors.length && overview){
+    overview.insertAdjacentHTML(
+      "beforeend",
+      `<div class="api-status error" style="margin-top:12px"><i class="api-dot"></i><span>${errors.join(" • ")}</span></div>`
+    );
   }
 }
 
@@ -4294,7 +4466,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv80_daily_${match.id}`;
+  const key=`mv82_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
