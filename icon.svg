@@ -1,21 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <radialGradient id="bg" cx="50%" cy="45%" r="60%">
-      <stop offset="0%" stop-color="#1f4160"/>
-      <stop offset="55%" stop-color="#081a2b"/>
-      <stop offset="100%" stop-color="#06111d"/>
-    </radialGradient>
-  </defs>
-  <rect width="512" height="512" rx="110" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="190" fill="none" stroke="#d9a72e" stroke-width="18"/>
-  <circle cx="256" cy="256" r="128" fill="#f4f8fb"/>
-  <polygon points="256,170 310,210 290,274 222,274 202,210" fill="#13283c"/>
-  <g fill="#13283c">
-    <polygon points="256,128 294,160 280,198 232,198 218,160"/>
-    <polygon points="350,194 382,232 366,278 324,266 314,220"/>
-    <polygon points="330,322 304,370 256,378 242,334 282,302"/>
-    <polygon points="182,322 230,302 270,334 256,378 208,370"/>
-    <polygon points="162,194 198,220 188,266 146,278 130,232"/>
-  </g>
-  <text x="256" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#37d6c7">MV AI</text>
+<rect width="512" height="512" rx="110" fill="#071a2c"/>
+<circle cx="256" cy="256" r="190" fill="none" stroke="#d9a72e" stroke-width="18"/>
+<circle cx="256" cy="236" r="125" fill="#f4f8fb"/>
+<polygon points="256,160 310,200 290,264 222,264 202,200" fill="#13283c"/>
+<text x="256" y="450" text-anchor="middle" font-family="Arial" font-size="44" font-weight="700" fill="#37d6c7">MV AI</text>
 </svg>

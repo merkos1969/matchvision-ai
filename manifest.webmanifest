@@ -1,9 +1,8 @@
 {
-  "name": "MatchVision AI V62",
+  "name": "MatchVision AI V75 Practical",
   "short_name": "MatchVision",
-  "description": "MatchVision AI με ενσωματωμένες οδηγίες χρήσης",
+  "description": "Επαναφορά ευδιάκριτου επάνω μενού και πρακτική πλοήγηση",
   "lang": "el",
-  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -22,12 +21,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
     }
   ]
 }

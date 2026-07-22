@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V62 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V75 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V62</title>
+  <title>MatchVision AI V75</title>
   <style>
     :root{
       --bg:#06111d;
@@ -190,12 +190,18 @@
     
     .market-title{margin:4px 2px 8px;color:var(--muted);font-size:12px;font-weight:800}
     .market-tabs{
-      display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;
-      scrollbar-width:thin
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;margin-bottom:14px;width:100%;overflow:visible
     }
     .market-tab{
-      flex:0 0 auto;border:1px solid var(--line);background:var(--panel2);color:var(--text);
-      padding:9px 12px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap
+      min-width:0;border:1px solid var(--line);background:var(--panel2);color:var(--text);
+      padding:10px 8px;border-radius:14px;font-size:12px;font-weight:800;
+      white-space:normal;line-height:1.2;text-align:center
+    }
+    .market-tab:last-child{grid-column:1/-1}
+    @media(min-width:620px){
+      .market-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+      .market-tab:last-child{grid-column:auto}
     }
     .market-tab.active{background:var(--accent);color:#03201d;border-color:transparent}
 
@@ -282,6 +288,228 @@
       background:rgba(255,209,102,.10);border:1px solid rgba(255,209,102,.18);
       color:var(--muted);line-height:1.45;font-size:12px
     }
+
+
+    .daily-date-card{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin:0 0 12px;padding:12px 14px;border-radius:16px;
+      background:linear-gradient(135deg,rgba(55,214,199,.10),rgba(75,125,255,.08));
+      border:1px solid rgba(55,214,199,.18)
+    }
+    .daily-date-card b{display:block;font-size:14px}
+    .daily-date-card span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .refresh-info{
+      margin:8px 0 12px;padding:10px 12px;border-radius:13px;
+      background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);
+      color:var(--muted);font-size:11px;line-height:1.45;text-align:center
+    }
+    .daily-data-state{
+      display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;
+      font-size:10px;font-weight:900
+    }
+    .daily-data-state.strict{background:rgba(74,222,128,.14);color:var(--ok)}
+    .daily-data-state.available{background:rgba(255,209,102,.14);color:var(--warning)}
+    .daily-data-state.limited{background:rgba(255,123,123,.14);color:var(--danger)}
+    .daily-meta-unavailable{
+      grid-column:1/-1;padding:11px 12px!important;text-align:left!important;
+      color:var(--muted);line-height:1.4
+    }
+
+
+    .compact-match{
+      display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+      margin-bottom:12px;padding:14px 15px;border-radius:18px;
+      background:linear-gradient(180deg,rgba(17,40,61,.97),rgba(8,27,43,.97));
+      border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px rgba(0,0,0,.14)
+    }
+    .compact-main{min-width:0}
+    .compact-league{color:var(--accent);font-size:11px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px}
+    .compact-team{font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0}
+    .compact-sub{color:var(--muted);font-size:11px;margin-top:7px}
+    .compact-side{display:grid;gap:7px;justify-items:end}
+    .compact-pick{
+      min-width:82px;padding:10px 9px;border-radius:16px;text-align:center;
+      background:rgba(55,214,199,.10);border:1px solid rgba(55,214,199,.18);
+      cursor:pointer;appearance:none;-webkit-appearance:none;
+      color:inherit;font:inherit
+    }
+    .compact-pick:active{transform:scale(.98)}
+    .compact-pick b{display:block;color:var(--accent);font-size:18px}
+    .compact-pick span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+    .compact-probs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .compact-probs div{text-align:center;padding:7px 5px;border-radius:11px;background:rgba(255,255,255,.035);font-size:11px;color:var(--muted)}
+    .compact-probs b{display:block;color:var(--text);font-size:13px;margin-bottom:2px}
+    .compact-actions{grid-column:1/-1;display:grid;gap:8px}
+    .recommendation-hero{
+      margin:12px 0;padding:16px;border-radius:20px;
+      background:linear-gradient(135deg,rgba(55,214,199,.14),rgba(75,125,255,.10));
+      border:1px solid rgba(55,214,199,.22)
+    }
+    .recommendation-hero small{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+    .recommendation-hero strong{display:block;color:var(--accent);font-size:24px;line-height:1.15}
+    .recommendation-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .recommendation-metrics div{background:rgba(0,0,0,.12);border-radius:13px;padding:10px 6px;text-align:center}
+    .recommendation-metrics b{display:block;font-size:17px}
+    .recommendation-metrics span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+    .why-pick{margin-top:12px;padding:13px;border-radius:15px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}
+    .why-pick b{display:block;margin-bottom:8px}
+    .why-pick ul{margin:0;padding-left:19px;color:var(--muted);line-height:1.55}
+    .bottom-nav{
+      position:fixed;left:0;right:0;bottom:0;z-index:80;
+      display:grid;grid-template-columns:repeat(5,1fr);
+      background:rgba(5,16,27,.97);backdrop-filter:blur(14px);
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:6px 4px calc(6px + env(safe-area-inset-bottom))
+    }
+    .bottom-nav button{border:0;background:transparent;color:var(--muted);display:grid;place-items:center;gap:2px;padding:6px 2px;font-size:10px;font-weight:800}
+    .bottom-nav button span:first-child{font-size:18px;line-height:1}
+    .bottom-nav button.active{color:var(--accent)}
+    body{padding-bottom:78px}
+
+
+    .hero{
+      background:
+        radial-gradient(circle at 80% 15%,rgba(55,214,199,.18),transparent 34%),
+        linear-gradient(145deg,#0b3142,#071b2c 58%,#06131f);
+      border:1px solid rgba(55,214,199,.22);
+      border-radius:24px;
+      padding:22px 18px;
+    }
+    .hero h1{font-size:clamp(28px,7vw,44px);line-height:1.03;margin:0 0 10px}
+    .hero p{font-size:15px;line-height:1.55;margin:0}
+    .stats{gap:8px;margin-top:16px}
+    .stat{border-radius:16px;padding:12px 7px;background:rgba(0,0,0,.15)}
+    .controls{
+      display:grid!important;
+      grid-template-columns:1fr!important;
+      gap:10px!important;
+      overflow:visible!important;
+    }
+    .chips{
+      display:grid!important;
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:8px!important;
+      overflow:visible!important;
+      scrollbar-width:none!important;
+    }
+    .chip{
+      width:100%!important;min-width:0!important;
+      text-align:center!important;padding:11px 7px!important;
+      border-radius:14px!important;white-space:normal!important;
+    }
+    .matches{display:grid;gap:12px}
+    .compact-match{
+      margin:0!important;
+      border-radius:20px!important;
+      border-color:rgba(55,214,199,.13)!important;
+    }
+    .compact-pick{
+      background:linear-gradient(135deg,rgba(55,214,199,.17),rgba(55,214,199,.07))!important;
+      min-width:112px!important;
+    }
+    .compact-pick b{font-size:16px!important;line-height:1.2!important}
+    .compact-probs div{
+      background:rgba(255,255,255,.05)!important;
+      border:1px solid rgba(255,255,255,.05)!important;
+    }
+    .bottom-nav{
+      display:grid!important;
+      visibility:visible!important;
+      opacity:1!important;
+      min-height:64px;
+      box-shadow:0 -12px 28px rgba(0,0,0,.38);
+    }
+    .bottom-nav button{
+      min-width:0!important;
+      border-radius:12px!important;
+    }
+    .bottom-nav button.active{
+      background:rgba(55,214,199,.11)!important;
+      color:var(--accent)!important;
+    }
+    main{padding-bottom:96px!important}
+
+
+    /* V74 Practical */
+    #hero{display:none!important}
+    #menuBtn{
+      display:flex!important;
+      width:48px!important;height:48px!important;
+      align-items:center!important;justify-content:center!important;
+      border-radius:15px!important;
+      font-size:27px!important;
+      background:#0d263b!important;
+      border:1px solid #244964!important;
+      color:#fff!important;
+      box-shadow:0 8px 20px rgba(0,0,0,.22)!important
+    }
+    .title-wrap .subtitle,.title-badges{display:none!important}
+    header{position:sticky;top:0;z-index:70;background:rgba(5,16,27,.98)}
+    .topbar{grid-template-columns:auto auto 1fr!important;padding:10px 14px!important;gap:10px!important}
+    .logo{width:42px!important;height:42px!important;font-size:23px!important}
+    .title-wrap h1{font-size:23px!important;line-height:1!important;white-space:nowrap!important}
+    #matchesView{padding-top:12px}
+    .search-wrap{
+      display:grid!important;grid-template-columns:1fr!important;
+      gap:8px!important;margin-bottom:10px!important
+    }
+    .search-wrap input,.search-wrap select{
+      min-height:46px!important;border-radius:14px!important;font-size:14px!important
+    }
+    .controls{
+      display:grid!important;grid-template-columns:1fr 1fr!important;
+      gap:8px!important;margin:0 0 10px!important
+    }
+    .controls .chip{display:none!important}
+    .controls .chip[data-filter="today"],
+    .controls .chip[data-filter="tomorrow"]{display:block!important}
+    .date-strip{display:none!important}
+    .section-title{margin:8px 2px 10px!important}
+    .section-title h3{font-size:21px!important}
+    .section-title span{font-size:11px!important}
+    .match-list{display:grid!important;gap:9px!important}
+    .compact-match{
+      grid-template-columns:1fr auto!important;
+      gap:9px!important;padding:12px!important;border-radius:16px!important;
+      min-height:0!important
+    }
+    .compact-league{font-size:10px!important;margin-bottom:5px!important}
+    .compact-team{font-size:14px!important;margin:2px 0!important}
+    .compact-team img{width:25px!important;height:25px!important}
+    .compact-sub{font-size:10px!important;margin-top:5px!important}
+    .compact-side{align-self:start!important}
+    .compact-side .fav{width:34px!important;height:34px!important;font-size:20px!important}
+    .compact-pick{display:none!important}
+    .compact-probs{
+      grid-column:1/-1!important;gap:5px!important;margin-top:2px!important
+    }
+    .compact-probs div{padding:6px 4px!important;font-size:10px!important}
+    .compact-probs b{font-size:13px!important}
+    .compact-actions{grid-column:1/-1!important}
+    .compact-actions .analysis-action,
+    .compact-actions .details{display:none!important}
+    .practical-analysis-btn{
+      width:100%;border:0;border-radius:13px;padding:11px 12px;
+      background:linear-gradient(135deg,#35d4c4,#2d9cc5);
+      color:#03202a;font-weight:900;font-size:14px
+    }
+    .panel{margin-top:2px!important}
+    .analysis-panel-head{padding-top:4px}
+    .recommendation-hero{padding:13px!important;margin:8px 0!important}
+    .recommendation-hero strong{font-size:21px!important}
+    .recommendation-metrics{gap:6px!important}
+    .recommendation-metrics div{padding:8px 4px!important}
+    .analysis-section{padding:12px!important}
+    .ticket-bar{display:none!important}
+    .analysis-section:has(.ticket-label){display:none!important}
+    .bottom-nav{
+      grid-template-columns:repeat(4,1fr)!important;
+      bottom:max(0px,env(safe-area-inset-bottom))!important
+    }
+    .bottom-nav button[data-bottom-nav="standings"],
+    .bottom-nav button[data-bottom-nav="history"]{display:none!important}
+    body{padding-bottom:72px!important}
+    .drawer-hint{display:none!important}
 
     .analysis-note{
       margin-top:12px;padding:12px 13px;border-radius:14px;
@@ -794,10 +1022,10 @@
 <div class="app">
   <header id="appHeader" class="compact">
     <div class="topbar">
-      <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα menu">☰</button>
+      <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V62</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V75</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -927,12 +1155,19 @@
   <section id="dailyPicksView" class="hidden">
     <div class="section-title">
       <h3>Επιλογές ημέρας</h3>
-      <button class="small-btn" id="refreshDailyPicks">Ανανέωση</button>
+      <button class="small-btn" id="refreshDailyPicks">↻ Ανανέωση επιλογών</button>
+    </div>
+
+    <div class="daily-date-card" id="dailyDateCard">
+      <div>
+        <b id="dailyDateTitle">Επιλογές ημέρας</b>
+        <span id="dailyLastUpdated">Δεν έχει γίνει ακόμη ενημέρωση</span>
+      </div>
+      <span class="daily-data-state available">Ώρα Ελλάδας</span>
     </div>
 
     <div class="daily-warning">
       Οι επιλογές φορτώνονται αυτόματα από τις διαθέσιμες προβλέψεις του API για τους σημερινούς αγώνες.
-      Εμφανίζονται μόνο αγώνες με επαρκή δεδομένα και καθαρή διαφορά πιθανοτήτων.
       Δεν υπάρχει πραγματικά «σίγουρο» στοίχημα.
     </div>
     <div class="api-status" id="dailyPicksStatus">
@@ -940,6 +1175,9 @@
     </div>
     <div class="daily-request-summary" id="dailyRequestSummary">
       Αυτόματη ανάλυση: έως 20 αγώνες • Προτεραιότητα στα βασικά πρωταθλήματα
+    </div>
+    <div class="refresh-info" id="dailyRefreshInfo">
+      Η ανανέωση μπορεί να χρησιμοποιήσει έως 21 αιτήματα API: 1 για το πρόγραμμα και έως 20 για προβλέψεις.
     </div>
 
     <div class="daily-tabs">
@@ -964,19 +1202,19 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V62</span>
+      <span>V75</span>
     </div>
 
     <div class="guide-grid">
       <div class="guide-card">
-        <h4>🚀 Πρώτη ρύθμιση</h4>
+        <h4>🔐 Ρύθμιση διαχειριστή</h4>
         <div class="guide-step">
           <span class="guide-number">1</span>
-          <div><b>Άνοιξε τις Ρυθμίσεις</b><p>Πάτησε το μενού επάνω αριστερά και μετά «Ρυθμίσεις».</p></div>
+          <div><b>Άνοιξε τις Ρυθμίσεις</b><p>Η ενότητα αυτή αφορά μόνο τον διαχειριστή της εφαρμογής.</p></div>
         </div>
         <div class="guide-step">
           <span class="guide-number">2</span>
-          <div><b>Βάλε το API-Football Key</b><p>Επικόλλησε το προσωπικό σου API Key. Αποθηκεύεται μόνο στη συγκεκριμένη συσκευή.</p></div>
+          <div><b>Βάλε το API-Football Key</b><p>Το API Key το καταχωρίζει μόνο ο διαχειριστής. Οι υπόλοιποι χρήστες δεν πρέπει να το γνωρίζουν.</p></div>
         </div>
         <div class="guide-step">
           <span class="guide-number">3</span>
@@ -1041,7 +1279,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V62</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V75</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1134,15 +1372,13 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V62 • GitHub Ready fixed daily picks</div>
+      <div class="drawer-version">V75 • Practical fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
 
-  <div class="drawer-section-title">Κύριο menu</div>
-  <button class="active" data-nav="matches"><span class="nav-icon">⚽</span><span class="nav-label">Αγώνες</span></button>
-  <button data-nav="live"><span class="nav-icon">🔴</span><span class="nav-label">Live Score</span></button>
-  <button data-nav="standings"><span class="nav-icon">🏆</span><span class="nav-label">Βαθμολογίες</span></button>
+  <div class="drawer-section-title">Περισσότερα</div>
+      <button data-nav="standings"><span class="nav-icon">🏆</span><span class="nav-label">Βαθμολογίες</span></button>
   <button data-nav="favorites"><span class="nav-icon">★</span><span class="nav-label">Αγαπημένα</span></button>
   <button data-nav="history"><span class="nav-icon">▤</span><span class="nav-label">Αποτελέσματα</span></button>
 
@@ -1151,12 +1387,16 @@
   <button data-nav="guide"><span class="nav-icon">📘</span><span class="nav-label">Οδηγίες χρήσης</span></button>
   <button data-nav="settings"><span class="nav-icon">⚙</span><span class="nav-label">Ρυθμίσεις</span></button>
 
-  <div class="nav-hint">
-    Το menu ανοίγει πλέον από τα αριστερά, ώστε να έχεις καθαρότερη οθόνη και περισσότερες επιλογές χωρίς στρίμωγμα στο κάτω μέρος.
-  </div>
+  <div class="nav-hint">Βαθμολογίες, αποτελέσματα, αγαπημένα, οδηγίες και ρυθμίσεις.</div>
   <div class="menu-footer">by Merkourios Kermanidis</div>
 </nav>
 
+<nav class="bottom-nav" id="bottomNav" aria-label="Κύρια πλοήγηση">
+    <button data-bottom-nav="matches" class="active"><span>⚽</span><span>Αγώνες</span></button>
+    <button data-bottom-nav="daily"><span>🎯</span><span>Επιλογές</span></button>
+    <button data-bottom-nav="live"><span>🔴</span><span>Live</span></button>
+    <button data-bottom-nav="more"><span>☰</span><span>Περισσότερα</span></button>
+  </nav>
 <script>
 let matches = [
   {id:1,day:"today",league:"Ελλάδα • Super League",time:"19:00",home:"Ολυμπιακός",away:"Παναθηναϊκός",hform:"4Ν-1Ι",aform:"3Ν-1Ι-1Η",p:[46,31,23],pick:"1Χ",confidence:78,over:55,gg:52,score:"2–1",reason:"Η γηπεδούχος παρουσιάζει καλύτερη εντός έδρας φόρμα και υψηλότερο μέσο όρο τελικών προσπαθειών.",status:"pending"},
@@ -1253,6 +1493,46 @@ let liveMatches = [
 ];
 
 let historyData = [];
+let savedPredictions = JSON.parse(localStorage.getItem("mv75_saved_predictions") || "[]");
+
+function savePredictionRecord(match){
+  if(!match?.id || !match?.analyzed) return;
+
+  const record={
+    id:String(match.id),
+    home:match.home||"",
+    away:match.away||"",
+    league:match.league||"",
+    pick:match.pick||"",
+    pickCode:match.pickCode||bestOutcomeCode(match)||"",
+    savedAt:Date.now()
+  };
+
+  const index=savedPredictions.findIndex(x=>String(x.id)===String(record.id));
+  if(index>=0) savedPredictions[index]=record;
+  else savedPredictions.push(record);
+
+  localStorage.setItem("mv75_saved_predictions",JSON.stringify(savedPredictions));
+}
+
+function updateAccuracySummary(){
+  const wins=historyData.filter(x=>x.status==="win").length;
+  const losses=historyData.filter(x=>x.status==="loss").length;
+  const completed=wins+losses;
+
+  const accuracy=document.getElementById("accuracy");
+  if(accuracy){
+    accuracy.textContent=completed ? `${Math.round(wins/completed*100)}%` : "—";
+  }
+
+  const historySummary=document.getElementById("historySummary");
+  if(historySummary){
+    historySummary.textContent=completed
+      ? `${wins}/${completed} επιτυχίες`
+      : "Δεν υπάρχουν ακόμη ολοκληρωμένες προβλέψεις";
+  }
+}
+
 
 let currentFilter = "today";
 let favorites = JSON.parse(localStorage.getItem("mv2_favorites") || "[]");
@@ -1557,6 +1837,11 @@ function syncFullAnalysisPanel(fixtureId,match){
   const awayForm=panel.querySelector('[data-full-away-form]');
   const strongest=panel.querySelector('[data-full-strongest]');
   const confidence=panel.querySelector('[data-full-confidence]');
+  const fullPick=panel.querySelector('[data-full-pick]');
+  const completenessNode=panel.querySelector('[data-full-completeness]');
+  const probabilityNode=panel.querySelector('[data-full-probability]');
+  const whyPickNode=panel.querySelector('[data-why-pick]');
+  const recommendationSection=panel.querySelector('[data-section="recommendation"]');
   const reason=panel.querySelector('[data-full-reason]');
 
   const ready=hasPrediction(match);
@@ -1589,12 +1874,25 @@ function syncFullAnalysisPanel(fixtureId,match){
   if(awayForm) awayForm.textContent=match.aform || '—';
   if(strongest) strongest.textContent=ready?`${best}%`:'—';
   if(confidence) confidence.textContent=ready?`${match.confidence}%`:'—';
+  if(fullPick) fullPick.textContent=ready?(match.pick||"—"):"—";
+  if(completenessNode) completenessNode.textContent=`${matchCompleteness(match)}%`;
+  if(probabilityNode) probabilityNode.textContent=ready?`${best}%`:"—";
+  if(recommendationSection) recommendationSection.classList.toggle("is-hidden",!ready);
+  if(whyPickNode){
+    const reasons=[];
+    if(match.reason) reasons.push(match.reason);
+    if(hasDisplayValue(match.hform)) reasons.push(`Φόρμα γηπεδούχου: ${match.hform}.`);
+    if(hasDisplayValue(match.aform)) reasons.push(`Φόρμα φιλοξενούμενου: ${match.aform}.`);
+    const gap=predictionGap(match);
+    if(gap>0) reasons.push(`Διαφορά από τη δεύτερη πιθανότερη έκβαση: ${gap} μονάδες.`);
+    whyPickNode.innerHTML=`<b>Γιατί προτείνεται</b><ul>${(reasons.length?reasons:["Περιορισμένα διαθέσιμα δεδομένα."]).slice(0,4).map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  }
   if(reason) reason.textContent=match.reason || '—';
 }
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv62_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv75_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!btn || !box) return;
 
@@ -1676,6 +1974,7 @@ async function analyzeFixture(fixtureId){
     if(match){
       match.p=[ph,pd,pa];
       match.pick=pick;
+      match.pickCode=pickCode||bestOutcomeCode(match)||"";
       match.confidence=quality.key==="full" ? maxp : quality.key==="limited" ? Math.min(maxp,60) : 0;
       match.over=null;
       match.overText=overUnderText || '—';
@@ -1743,13 +2042,15 @@ async function analyzeFixture(fixtureId){
     }
 
     syncFullAnalysisPanel(fixtureId,match);
+    savePredictionRecord(match);
 
-    localStorage.setItem(`mv62_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv75_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
         p:match.p,
         pick:match.pick,
+        pickCode:match.pickCode,
         confidence:match.confidence,
         over:match.over,
         overText:match.overText,
@@ -2013,7 +2314,14 @@ async function loadFinishedResults(){
     setResultsStatus("Φόρτωση τελικών αποτελεσμάτων…","loading");
     const date=resultDate(selectedResultDay);
     const data=await apiFetch(`/fixtures?date=${date}&status=FT-AET-PEN&timezone=Europe%2FAthens`);
-    historyData=(data.response||[]).map(item=>({
+    historyData=(data.response||[]).map(item=>{
+      const saved=savedPredictions.find(x=>String(x.id)===String(item.fixture.id));
+      const outcome=actualOutcome(item.goals.home??0,item.goals.away??0);
+      const resultStatus=saved
+        ? (pickCoversOutcome(saved.pickCode,outcome) ? "win" : "loss")
+        : "completed";
+
+      return {
       id:item.fixture.id,
       league:`${item.league.country||""} • ${item.league.name||""}`,
       leagueLogo:item.league.logo||"",
@@ -2036,9 +2344,13 @@ async function loadFinishedResults(){
           return "—";
         }
       })(),
-      status:"Ο αγώνας ολοκληρώθηκε"
-    }));
+      prediction:saved?.pick||"",
+      predictionCode:saved?.pickCode||"",
+      status:resultStatus
+    };
+    });
     renderHistory();
+    updateAccuracySummary();
     setResultsStatus(
       historyData.length ? `${historyData.length} τελικά αποτελέσματα φορτώθηκαν` : "Δεν υπάρχουν τελικά αποτελέσματα για αυτή την ημέρα",
       "ok"
@@ -2184,13 +2496,9 @@ function init(){
   }
 
   populateLeagues();
-  document.getElementById("matchCount").textContent=matches.filter(m=>m.day==="today").length;
-  document.getElementById("favCount").textContent=favorites.length;
-  const wins=historyData.filter(x=>x.status==="win").length;
-  const completed=historyData.filter(x=>x.status==="win" || x.status==="loss").length;
-  document.getElementById("accuracy").textContent=completed ? Math.round(wins/completed*100)+"%" : "—";
-  const historySummary=document.getElementById("historySummary");
-  if(historySummary) historySummary.textContent=completed ? `${wins}/${completed} επιτυχίες` : "Χωρίς ολοκληρωμένες προβλέψεις";
+  const matchCountNode=document.getElementById("matchCount"); if(matchCountNode) matchCountNode.textContent=matches.filter(m=>m.day==="today").length;
+  const favCountNode=document.getElementById("favCount"); if(favCountNode) favCountNode.textContent=favorites.length;
+  updateAccuracySummary();
   applySettings();
   if(settings.realData && Array.isArray(matches) && matches.some(m=>m.realData)){
     setApiStatus(`${matches.length} πραγματικοί αγώνες διαθέσιμοι`,"ok");
@@ -2271,7 +2579,7 @@ function hasAnyFullAnalysis(match){
 function render(){
   const list=document.getElementById("matchList");
   const data=filteredMatches();
-  document.getElementById("favCount").textContent=favorites.length;
+  const favCountNode=document.getElementById("favCount"); if(favCountNode) favCountNode.textContent=favorites.length;
   document.getElementById("sectionTitle").textContent=
     currentFilter==="favorites"?"Αγαπημένοι αγώνες":
     currentFilter==="high"?"Υψηλή αξιοπιστία":
@@ -2288,32 +2596,35 @@ function render(){
     const confidenceText=ready ? `${m.confidence}% αξιοπιστία` : "Πάτησε για ανάλυση";
     const strongestText=ready ? `${bestProb}%` : "—";
     return `
-    <article class="match">
-      <div class="match-head">
-        <div class="league">${m.leagueLogo?`<img class="league-logo" src="${m.leagueLogo}" alt="">`:`<i class="dot"></i>`}${m.league}</div>
+    <article class="match compact-match">
+      <div class="compact-main">
+        <div class="compact-league">${m.leagueLogo?`<img class="league-logo" src="${m.leagueLogo}" alt="">`:""}${m.league}</div>
+        <div class="compact-team">${m.logoHome?`<img class="team-logo" src="${m.logoHome}" alt="">`:""}${m.home}</div>
+        <div class="compact-team">${m.logoAway?`<img class="team-logo" src="${m.logoAway}" alt="">`:""}${m.away}</div>
+        <div class="compact-sub">${renderTimeBadge(m.time)} • ${m.hform||"—"} / ${m.aform||"—"}</div>
+      </div>
+
+      <div class="compact-side">
         <button class="fav ${favorites.includes(m.id)?'on':''}" onclick="toggleFav(${m.id})">★</button>
+        <button class="compact-pick" type="button" onclick="toggleDetails(${m.id})">
+          <b>${ready?(m.pick||"—"):"Άνοιγμα"}</b>
+          <span>${ready?confidenceText:"Για πλήρη ανάλυση"}</span>
+        </button>
       </div>
-      <div class="teams">
-        <div class="team">${m.logoHome?`<img class="team-logo" src="${m.logoHome}" alt="">`:""}${m.home}<small>${m.hform}</small></div>
-        <div class="vs">${renderTimeBadge(m.time)}<br>VS</div>
-        <div class="team">${m.logoAway?`<img class="team-logo" src="${m.logoAway}" alt="">`:""}${m.away}<small>${m.aform}</small></div>
+
+      <div class="compact-probs">
+        <div><b>${probValue(m.p[0])}</b>1</div>
+        <div><b>${probValue(m.p[1])}</b>Χ</div>
+        <div><b>${probValue(m.p[2])}</b>2</div>
       </div>
-      <div class="prob">
-        <div><b>${probValue(m.p[0])}</b><span>1</span></div>
-        <div><b>${probValue(m.p[1])}</b><span>Χ</span></div>
-        <div><b>${probValue(m.p[2])}</b><span>2</span></div>
-      </div>
-      <div class="recommend">
-        <div>Κύρια εκτίμηση: <strong>${m.pick}</strong></div>
-        <div class="risk">${confidenceText}</div>
-      </div>
-      ${m.realData ? `
-        <button class="analysis-action" id="analyze-${m.id}" onclick="analyzeFixture(${m.id})">
-          🤖 Ανάλυση αγώνα με πραγματικά στοιχεία
+
+      <div class="compact-actions">
+        <button class="practical-analysis-btn" id="analyze-${m.id}" onclick="openPracticalAnalysis(${m.id})">
+          ${ready ? "Δες την ανάλυση" : "Ανάλυση αγώνα"}
         </button>
         <div id="prediction-${m.id}"></div>
-      ` : ""}
-      <button class="details" onclick="toggleDetails(${m.id})">Πλήρης ανάλυση</button>
+      </div>
+
       <div class="panel" id="panel-${m.id}">
         <div class="analysis-panel-head">
           <b>Αναλυτικά στοιχεία</b>
@@ -2321,7 +2632,21 @@ function render(){
         </div>
 
         <div class="analysis-empty ${hasAnyFullAnalysis(m) ? 'is-hidden' : ''}" data-full-empty>
-          Πάτησε «Ανάλυση αγώνα με πραγματικά στοιχεία» για να εμφανιστούν τα διαθέσιμα δεδομένα.
+          Πάτησε «Ανάλυση αγώνα» για να φορτωθούν τα διαθέσιμα στοιχεία.
+        </div>
+
+        <div class="recommendation-hero ${ready ? '' : 'is-hidden'}" data-section="recommendation">
+          <small>Πρόταση MatchVision</small>
+          <strong data-full-pick>${ready ? m.pick : "—"}</strong>
+          <div class="recommendation-metrics">
+            <div><b data-full-confidence>${ready ? metricValue(m.confidence) : "—"}</b><span>Εμπιστοσύνη</span></div>
+            <div><b data-full-completeness>${matchCompleteness(m)}%</b><span>Πληρότητα</span></div>
+            <div><b data-full-probability>${ready ? strongestText : "—"}</b><span>Πιθανότητα</span></div>
+          </div>
+          <div class="why-pick" data-why-pick>
+            <b>Γιατί προτείνεται</b>
+            <ul><li>${m.reason||"Η αιτιολόγηση θα εμφανιστεί μετά την ανάλυση."}</li></ul>
+          </div>
         </div>
 
         <div class="analysis-section ${hasMetricOrText(m.over,m.overText) || hasMetricOrText(m.gg,m.ggText) || hasScoreValue(m.score) ? '' : 'is-hidden'}" data-section="goals">
@@ -2757,6 +3082,11 @@ function loadCachedCountryLeagues(){
 
 
 
+function closeAllStandingsCategories(){
+  expandedCountryGroups={};
+  gammaExpanded=false;
+}
+
 function renderLeagueChoices(){
   const container=document.getElementById("leagueChoices");
   if(!container) return;
@@ -2783,7 +3113,6 @@ function renderLeagueChoices(){
     if(countryLabel==="Ελλάδα"){
       const normalGreek=countryLeagues.filter(l=>!isGammaLeagueName(l.name));
       const gammaLeagues=countryLeagues.filter(l=>isGammaLeagueName(l.name));
-      if(gammaLeagues.some(l=>l.id===selectedStandingsLeague)) gammaExpanded=true;
 
       htmlParts.push(normalGreek.map(l=>`
         <button class="league-choice ${l.id===selectedStandingsLeague?"active":""}" data-league-id="${l.id}">
@@ -2818,7 +3147,7 @@ function renderLeagueChoices(){
 
     const selectedInCountry = countryLeagues.some(l=>l.id===selectedStandingsLeague);
     if(!(countryLabel in expandedCountryGroups)){
-      expandedCountryGroups[countryLabel]=selectedInCountry;
+      expandedCountryGroups[countryLabel]=false;
     }
     const expanded = !!expandedCountryGroups[countryLabel];
 
@@ -2880,11 +3209,6 @@ function renderLeagueChoices(){
   container.querySelectorAll("[data-league-id]").forEach(btn=>{
     btn.addEventListener("click",()=>{
       selectedStandingsLeague=Number(btn.dataset.leagueId);
-      const selectedLeague=supportedLeagues.find(l=>l.id===selectedStandingsLeague);
-      if(selectedLeague?.group==="Ελλάδα" && isGammaLeagueName(selectedLeague.name)) gammaExpanded=true;
-      if(selectedLeague?.group && ["Αγγλία","Γαλλία","Ισπανία","Γερμανία","Ιταλία"].includes(selectedLeague.group)){
-        expandedCountryGroups[selectedLeague.group]=true;
-      }
       renderLeagueChoices();
       syncSeasonOptionsForSelectedLeague();
       setStandingsStatus("Έγινε επιλογή πρωταθλήματος. Αναζήτηση διαθέσιμης σεζόν…","loading");
@@ -3384,7 +3708,35 @@ function toggleFav(id){
   localStorage.setItem("mv2_favorites",JSON.stringify(favorites));
   render();
 }
-function toggleDetails(id){document.getElementById(`panel-${id}`).classList.toggle("open")}
+function toggleDetails(id){const panel=document.getElementById(`panel-${id}`);if(!panel) return;const willOpen=!panel.classList.contains("open");panel.classList.toggle("open");if(willOpen){setTimeout(()=>panel.scrollIntoView({behavior:"smooth",block:"nearest"}),120);}}
+
+async function openPracticalAnalysis(id){
+  const match=matches.find(m=>m.id===id);
+  const panel=document.getElementById(`panel-${id}`);
+  if(!match || !panel) return;
+
+  if(hasPrediction(match)){
+    if(!panel.classList.contains("open")) toggleDetails(id);
+    return;
+  }
+
+  const button=document.getElementById(`analyze-${id}`);
+  if(button){
+    button.disabled=true;
+    button.textContent="Ανάλυση…";
+  }
+
+  try{
+    await analyzeFixture(id);
+    if(!panel.classList.contains("open")) toggleDetails(id);
+  }finally{
+    const updated=document.getElementById(`analyze-${id}`);
+    if(updated){
+      updated.disabled=false;
+      updated.textContent=hasPrediction(match) ? "Δες την ανάλυση" : "Ανάλυση αγώνα";
+    }
+  }
+}
 
 document.querySelectorAll(".chip[data-filter]").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll(".chip[data-filter]").forEach(b=>b.classList.remove("active"));
@@ -3460,6 +3812,7 @@ let dailyMarket="result";
 let dailyMatches=[];
 let dailyPicksLoading=false;
 let dailyRequestsUsed=0;
+let dailyLastUpdatedAt=null;
 
 const PREFERRED_LEAGUES=[
   "Premier League","La Liga","Serie A","Bundesliga","Ligue 1",
@@ -3479,6 +3832,34 @@ function updateDailyRequestSummary(extra=""){
   const el=document.getElementById("dailyRequestSummary");
   if(!el) return;
   el.textContent=`Αιτήματα αυτής της φόρτωσης: ${dailyRequestsUsed} • Όριο αυτόματης ανάλυσης: 20 αγώνες${extra?` • ${extra}`:""}`;
+}
+
+function updateDailyDateHeader(){
+  const title=document.getElementById("dailyDateTitle");
+  const updated=document.getElementById("dailyLastUpdated");
+  if(title){
+    const now=new Date();
+    const label=new Intl.DateTimeFormat("el-GR",{
+      timeZone:"Europe/Athens",
+      weekday:"long",
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    }).format(now);
+    title.textContent=`Επιλογές ${label}`;
+  }
+  if(updated){
+    updated.textContent=dailyLastUpdatedAt
+      ? `Τελευταία ενημέρωση ${formatAthensTime(dailyLastUpdatedAt)}`
+      : "Δεν έχει γίνει ακόμη ενημέρωση";
+  }
+}
+
+function dailyDataState(match,usingFallback){
+  const completeness=matchCompleteness(match);
+  if(usingFallback) return {label:"Καλύτερη διαθέσιμη επιλογή",className:"available"};
+  if(completeness<50) return {label:"Περιορισμένα δεδομένα",className:"limited"};
+  return {label:"Πέρασε τα αυστηρά κριτήρια",className:"strict"};
 }
 
 function numericForm(value){
@@ -3603,32 +3984,39 @@ function getAnalyzedMatches(type=dailyPickFilter){
   const eligible=dailyMatches.filter(m=>isEligibleDailyMatch(m,type));
   if(eligible.length) return eligible;
 
-  // Εφεδρική κατάταξη: όταν κανένας αγώνας δεν περνά τα βασικά όρια,
-  // δείξε τους καλύτερους διαθέσιμους αντί για κενή καρτέλα.
+  // Όταν κανένας αγώνας δεν περνά όλα τα αυστηρά όρια,
+  // εμφανίζονται οι καλύτερες διαθέσιμες αναλύσεις με προειδοποίηση.
   const available=dailyMatches.filter(m=>
     m?.realData &&
     hasPrediction(m) &&
     (!Number.isFinite(m.kickoffTimestamp) || m.kickoffTimestamp>Date.now()-10*60*1000)
   );
+
   if(type==="safe"){
-    return available
-      .filter(m=>
-        Math.max(...m.p)>=40 &&
-        Number(m.confidence||0)>=42 &&
-        predictionGap(m)>=4 &&
-        matchCompleteness(m)>=20
-      )
+    const pool=dailyMarket==="result"
+      ? available
+      : available.filter(m=>Number.isFinite(marketProbability(m,dailyMarket)));
+
+    return pool
       .sort((a,b)=>dailyPickScore(b,type)-dailyPickScore(a,type))
       .slice(0,3);
   }
+
   if(type==="risk"){
-    return available
-      .filter(m=>Math.max(...m.p)>=33 && predictionGap(m)>=1)
+    const pool=dailyMarket==="result"
+      ? available
+      : available.filter(m=>Number.isFinite(marketProbability(m,dailyMarket)));
+
+    return pool
       .sort((a,b)=>dailyPickScore(b,type)-dailyPickScore(a,type))
       .slice(0,5);
   }
-  return available
-    .filter(m=>(m.p?.[1]||0)>=27 || (m.p?.[2]||0)>=27)
+
+  const surprisePool=available.filter(m=>
+    (m.p?.[1]||0)>=24 || (m.p?.[2]||0)>=24
+  );
+
+  return (surprisePool.length ? surprisePool : available)
     .sort((a,b)=>dailyPickScore(b,type)-dailyPickScore(a,type))
     .slice(0,5);
 }
@@ -3692,7 +4080,9 @@ function dailyReason(match,type){
   if(dailyMarket!=="result"){
     const probability=marketProbability(match,dailyMarket);
     const expected=deriveExpectedGoals(match);
-    return `Η επιλογή ${marketLabel(dailyMarket)} εκτιμάται στο ${probability}% από μοντέλο Poisson που χρησιμοποιεί την πρόβλεψη γκολ του API${Number.isFinite(expected)?` (αναμενόμενα γκολ ${expected.toFixed(2)})`:""}.`;
+    return Number.isFinite(probability)
+      ? `Η επιλογή ${marketLabel(dailyMarket)} εκτιμάται στο ${probability}% από μοντέλο Poisson που χρησιμοποιεί την πρόβλεψη γκολ του API${Number.isFinite(expected)?` (αναμενόμενα γκολ ${expected.toFixed(2)})`:""}.`
+      : `Δεν υπάρχουν επαρκή δεδομένα για αξιόπιστη εκτίμηση της αγοράς ${marketLabel(dailyMarket)}.`;
   }
 
   if(type==="safe"){
@@ -3718,7 +4108,7 @@ function renderDailyPicks(){
   if(!analyzed.length){
     list.innerHTML=dailyPicksLoading
       ? '<div class="empty">Γίνεται αυτόματη αναζήτηση και αυστηρό φιλτράρισμα προβλέψεων από το API…</div>'
-      : `<div class="empty">Δεν βρέθηκαν αγώνες που να περνούν με ασφάλεια τα κριτήρια της κατηγορίας «${dailyPickFilter==="safe"?"Χαμηλότερο ρίσκο":dailyPickFilter==="risk"?"Ρίσκο":"Έκπληξη"}» για την αγορά «${marketLabel(dailyMarket)}».</div>`;
+      : `<div class="empty">Δεν υπάρχουν διαθέσιμα δεδομένα για την αγορά «${marketLabel(dailyMarket)}» στους αγώνες που αναλύθηκαν.</div>`;
     return;
   }
 
@@ -3726,8 +4116,8 @@ function renderDailyPicks(){
   const picks=sorted.slice(0,5);
 
   const fallbackNote=usingFallback
-    ? '<div class="daily-warning">Δεν υπήρχαν αγώνες που να περνούν όλα τα βασικά όρια. Εμφανίζονται μόνο διαθέσιμες επιλογές με κάποια διαφορά πιθανοτήτων και αυξημένη προσοχή.</div>'
-    : '';
+    ? '<div class="daily-warning"><b>Καλύτερες διαθέσιμες επιλογές:</b> κανένας αγώνας δεν πέρασε όλα τα αυστηρά όρια. Οι παρακάτω επιλογές είναι οι υψηλότερα βαθμολογημένες από τα διαθέσιμα δεδομένα και χρειάζονται αυξημένη προσοχή.</div>'
+    : '<div class="daily-success"><b>Αυστηρές επιλογές:</b> οι παρακάτω αγώνες πέρασαν τα βασικά κριτήρια της κατηγορίας.</div>';
 
   list.innerHTML=fallbackNote+picks.map((m,index)=>{
     const maxProb=Math.max(...m.p);
@@ -3735,7 +4125,10 @@ function renderDailyPicks(){
     const displayProbability=dailyMarket==="result" ? maxProb : selectedProbability;
     const gap=predictionGap(m);
     const completeness=matchCompleteness(m);
-    const typeLabel=dailyPickFilter==="safe"?"Χαμηλότερο ρίσκο":dailyPickFilter==="risk"?"Ρίσκο":"Έκπληξη";
+    const baseTypeLabel=dailyPickFilter==="safe"?"Χαμηλότερο ρίσκο":dailyPickFilter==="risk"?"Ρίσκο":"Έκπληξη";
+    const typeLabel=usingFallback && dailyPickFilter!=="surprise"
+      ? `Καλύτερη διαθέσιμη · ${baseTypeLabel}`
+      : baseTypeLabel;
     const typeClass=dailyPickFilter;
     return `
       <article class="daily-pick-card">
@@ -3743,14 +4136,24 @@ function renderDailyPicks(){
           <span class="daily-pick-type ${typeClass}">${typeLabel}</span>
           <span class="risk">#${index+1}</span>
         </div>
+        ${(()=>{
+          const state=dailyDataState(m,usingFallback);
+          return `<div style="margin-top:9px"><span class="daily-data-state ${state.className}">${state.label}</span></div>`;
+        })()}
         <div class="daily-pick-match">${m.home} – ${m.away}</div>
         <div class="daily-pick-league">${m.league}</div>
         <div class="daily-pick-choice">Προτεινόμενη κατεύθυνση: <b>${dailyPickLabel(m,dailyPickFilter)}</b></div>
-        <div class="daily-pick-meta">
-          <div><b>${Number.isFinite(displayProbability)?displayProbability:"—"}%</b><span>${dailyMarket==="result"?"Πιθανότητα":"Πιθανότητα αγοράς"}</span></div>
-          <div><b>${m.confidence}%</b><span>Βαθμός εμπιστοσύνης</span></div>
-          <div><b>${completeness}%</b><span>Πληρότητα δεδομένων</span></div>
-        </div>
+        ${Number.isFinite(displayProbability)
+          ? `<div class="daily-pick-meta">
+              <div><b>${displayProbability}%</b><span>${dailyMarket==="result"?"Πιθανότητα":"Πιθανότητα αγοράς"}</span></div>
+              <div><b>${m.confidence}%</b><span>Βαθμός εμπιστοσύνης</span></div>
+              <div><b>${completeness}%</b><span>Πληρότητα δεδομένων</span></div>
+            </div>`
+          : `<div class="daily-pick-meta">
+              <div class="daily-meta-unavailable">Δεν υπάρχουν επαρκή δεδομένα για αυτή την αγορά.</div>
+              <div><b>${m.confidence}%</b><span>Βαθμός εμπιστοσύνης</span></div>
+              <div><b>${completeness}%</b><span>Πληρότητα δεδομένων</span></div>
+            </div>`}
         <div class="daily-quality-row">
           <span class="daily-quality-pill">Διαφορά ${gap} μον.</span>
           <span class="daily-quality-pill ${completeness<50?'warn':''}">Δεδομένα ${completeness}%</span>
@@ -3865,7 +4268,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv62_daily_${match.id}`;
+  const key=`mv75_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
@@ -3967,13 +4370,20 @@ async function loadAutomaticDailyPicks(force=false){
     );
 
     const allAnalyzed=dailyMatches.filter(m=>hasPrediction(m)).length;
-    const eligibleSafe=getAnalyzedMatches("safe").length;
+    const strictSafe=dailyMatches.filter(m=>isEligibleDailyMatch(m,"safe")).length;
+    const fallbackSafe=strictSafe ? 0 : getAnalyzedMatches("safe").length;
     setDailyPicksStatus(
       allAnalyzed
-        ? `Αναλύθηκαν ${allAnalyzed} αγώνες • ${eligibleSafe} πέρασαν τα βασικά κριτήρια χαμηλότερου ρίσκου.`
+        ? (
+            strictSafe
+              ? `Αναλύθηκαν ${allAnalyzed} αγώνες • ${strictSafe} πέρασαν τα βασικά κριτήρια χαμηλότερου ρίσκου.`
+              : `Αναλύθηκαν ${allAnalyzed} αγώνες • κανένας δεν πέρασε όλα τα αυστηρά όρια • εμφανίζονται ${fallbackSafe} καλύτερες διαθέσιμες επιλογές.`
+          )
         : "Το API δεν είχε διαθέσιμες προβλέψεις για τους σημερινούς αγώνες.",
       allAnalyzed ? "ok" : ""
     );
+    dailyLastUpdatedAt=new Date();
+    updateDailyDateHeader();
     updateDailyRequestSummary(`${allAnalyzed} διαθέσιμες προβλέψεις`);
     renderDailyPicks();
   }catch(err){
@@ -3996,6 +4406,57 @@ function showView(view){
 document.getElementById("menuBtn").addEventListener("click",openMenu);
 document.getElementById("menuCloseBtn").addEventListener("click",closeMenu);
 document.getElementById("drawerOverlay").addEventListener("click",closeMenu);
+function activateBottomNav(target){
+  document.querySelectorAll("[data-bottom-nav]").forEach(x=>{
+    x.classList.toggle("active",x.dataset.bottomNav===target);
+  });
+}
+
+document.addEventListener("click",event=>{
+  const btn=event.target.closest("[data-bottom-nav]");
+  if(!btn) return;
+  const target=btn.dataset.bottomNav;
+  activateBottomNav(target);
+
+  if(target==="matches"){
+    stopLiveAutoRefresh();
+    showView("matchesView");
+    currentFilter="today";
+    syncChips("today");
+    render();
+  }
+  if(target==="daily"){
+    stopLiveAutoRefresh();
+    showView("dailyPicksView");
+    loadAutomaticDailyPicks(false);
+  }
+  if(target==="live"){
+    showView("liveView");
+    loadLiveMatches();
+    startLiveAutoRefresh();
+  }
+  if(target==="standings"){
+    stopLiveAutoRefresh();
+    closeAllStandingsCategories();
+    showView("standingsView");
+    loadAllCountryLeagues().finally(()=>{
+      closeAllStandingsCategories();
+      renderLeagueChoices();
+      syncSeasonOptionsForSelectedLeague();
+      loadStandingsFromApi();
+    });
+  }
+  if(target==="history"){
+    stopLiveAutoRefresh();
+    showView("historyView");
+    loadFinishedResults();
+  }
+  if(target==="more"){
+    document.getElementById("sideMenu").classList.add("open");
+    document.getElementById("drawerOverlay").classList.add("show");
+  }
+});
+
 document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click",()=>{
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
   closeMenu();
@@ -4007,7 +4468,17 @@ document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click
     render();
   }
   if(target==="live"){showView("liveView"); if(settings.realData && settings.apiKey) loadLiveFromApi(); else renderLive(); startLiveAutoRefresh()}
-  if(target==="standings"){stopLiveAutoRefresh();showView("standingsView");loadAllCountryLeagues().finally(()=>{syncSeasonOptionsForSelectedLeague();loadStandingsFromApi()})}
+  if(target==="standings"){
+    stopLiveAutoRefresh();
+    closeAllStandingsCategories();
+    showView("standingsView");
+    loadAllCountryLeagues().finally(()=>{
+      closeAllStandingsCategories();
+      renderLeagueChoices();
+      syncSeasonOptionsForSelectedLeague();
+      loadStandingsFromApi();
+    });
+  }
   if(target==="favorites"){stopLiveAutoRefresh();showView("matchesView");currentFilter="favorites";syncChips("favorites");render()}
   if(target==="history"){stopLiveAutoRefresh();showView("historyView"); loadFinishedResults()}
   if(target==="daily"){
@@ -4070,9 +4541,12 @@ document.querySelectorAll(".market-tab").forEach(btn=>btn.addEventListener("clic
   dailyMarket=btn.dataset.market;
   renderDailyPicks();
 }));
-document.getElementById("refreshDailyPicks")?.addEventListener("click",()=>loadAutomaticDailyPicks(true));
+document.getElementById("refreshDailyPicks")?.addEventListener("click",()=>{
+  const ok=confirm("Η ανανέωση μπορεί να χρησιμοποιήσει έως 21 αιτήματα API. Να συνεχιστεί;");
+  if(ok) loadAutomaticDailyPicks(true);
+});
 
+updateDailyDateHeader();
 init();
-</script>
-</body>
+</script></body>
 </html>
