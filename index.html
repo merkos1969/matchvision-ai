@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V75 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V77 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V75</title>
+  <title>MatchVision AI V77</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1025,7 +1025,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V75</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V77</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1202,30 +1202,15 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V75</span>
+      <span>V77</span>
     </div>
 
     <div class="guide-grid">
       <div class="guide-card">
-        <h4>🔐 Ρύθμιση διαχειριστή</h4>
-        <div class="guide-step">
-          <span class="guide-number">1</span>
-          <div><b>Άνοιξε τις Ρυθμίσεις</b><p>Η ενότητα αυτή αφορά μόνο τον διαχειριστή της εφαρμογής.</p></div>
-        </div>
-        <div class="guide-step">
-          <span class="guide-number">2</span>
-          <div><b>Βάλε το API-Football Key</b><p>Το API Key το καταχωρίζει μόνο ο διαχειριστής. Οι υπόλοιποι χρήστες δεν πρέπει να το γνωρίζουν.</p></div>
-        </div>
-        <div class="guide-step">
-          <span class="guide-number">3</span>
-          <div><b>Ενεργοποίησε τα πραγματικά δεδομένα</b><p>Άνοιξε τον διακόπτη «Χρήση πραγματικών δεδομένων» και πάτησε «Αποθήκευση».</p></div>
-        </div>
-        <div class="guide-step">
-          <span class="guide-number">4</span>
-          <div><b>Έλεγξε τη σύνδεση</b><p>Πάτησε «Δοκιμή σύνδεσης» και μετά «Φόρτωση αγώνων».</p></div>
-        </div>
+        <h4>🚀 Πώς ξεκινάς</h4>
+        <p>Άνοιξε την εφαρμογή και επίλεξε «Σήμερα» ή «Αύριο» για να δεις τους διαθέσιμους αγώνες.</p>
+        <p>Πάτησε «Ανάλυση αγώνα» για να εμφανιστούν η προτεινόμενη κατεύθυνση, οι πιθανότητες και τα διαθέσιμα στατιστικά.</p>
       </div>
-
       <div class="guide-card">
         <h4>⚽ Αγώνες και ανάλυση</h4>
         <p>Στην καρτέλα «Αγώνες» βλέπεις τα παιχνίδια της επιλεγμένης ημέρας σε ώρα Ελλάδας.</p>
@@ -1279,7 +1264,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V75</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V77</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1298,24 +1283,17 @@
           <option value="80">80% και άνω</option>
         </select>
       </div>
-      <div class="setting-row">
-        <label>API-Football Key</label>
-        <input id="apiKey" type="password" placeholder="Επικόλλησε το προσωπικό API Key">
-        <div class="hint">Αποθηκεύεται μόνο στη συγκεκριμένη συσκευή. Κάθε ανάλυση αγώνα χρησιμοποιεί επιπλέον αίτημα από το ημερήσιο όριο του API.</div>
-      </div>
-      <div class="toggle-row">
-        <div><b>Χρήση πραγματικών δεδομένων</b><div class="hint">Αγώνες ημέρας και Live Score από API-Football</div></div>
-        <button class="switch" id="realDataToggle"><i></i></button>
-      </div>
       <div class="toggle-row">
         <div><b>Αυτόματη ανανέωση Live</b><div class="hint">Κάθε 60 δευτερόλεπτα μόνο όταν η καρτέλα Live είναι ανοιχτή</div></div>
         <button class="switch" id="autoLiveToggle"><i></i></button>
       </div>
 
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
+      <div class="status ok" style="margin-top:16px">
+        <span class="dot"></span>
+        Πραγματικά δεδομένα μέσω ασφαλούς υπηρεσίας MatchVision
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
         <button class="small-btn" id="saveSettings">Αποθήκευση</button>
-        <button class="small-btn" id="testApi" style="background:#183954;color:white">Δοκιμή σύνδεσης</button>
-        <button class="small-btn" id="loadReal" style="background:#183954;color:white">Φόρτωση αγώνων</button>
       </div>
     </div>
   </section>
@@ -1372,7 +1350,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V75 • Practical fixed daily picks</div>
+      <div class="drawer-version">V77 • Public fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1493,7 +1471,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv75_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv77_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1512,7 +1490,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv75_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv77_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1536,10 +1514,12 @@ function updateAccuracySummary(){
 
 let currentFilter = "today";
 let favorites = JSON.parse(localStorage.getItem("mv2_favorites") || "[]");
-let settings = JSON.parse(localStorage.getItem("mv2_settings") || '{"light":false,"notifications":false,"minConfidence":0,"apiKey":"","realData":false,"autoLive":true}');
+let settings = JSON.parse(localStorage.getItem("mv2_settings") || '{"light":false,"notifications":false,"minConfidence":0,"realData":true,"autoLive":true}');
+settings.realData=true;
+delete settings.apiKey;
 
 
-const API_BASE="https://v3.football.api-sports.io";
+const API_BASE="https://matchvision-api.merkos1969.workers.dev";
 
 function setApiStatus(message,type=""){
   const el=document.getElementById("apiStatus");
@@ -1548,9 +1528,6 @@ function setApiStatus(message,type=""){
   el.innerHTML=`<i class="${type==="loading"?"loader":"api-dot"}"></i><span>${message}</span>`;
 }
 
-function apiHeaders(){
-  return {"x-apisports-key": settings.apiKey};
-}
 
 function mapFixture(item){
   const status=item.fixture?.status?.short||"NS";
@@ -1631,13 +1608,26 @@ function mapLive(item){
 }
 
 async function apiFetch(path){
-  if(!settings.apiKey) throw new Error("Δεν έχει αποθηκευτεί API Key.");
-  const response=await fetch(`${API_BASE}${path}`,{headers:apiHeaders()});
-  const data=await response.json();
-  if(!response.ok) throw new Error(`Σφάλμα HTTP ${response.status}`);
-  if(data.errors && Object.keys(data.errors).length){
-    throw new Error(Object.values(data.errors).join(" "));
+  const response=await fetch(`${API_BASE}${path}`,{
+    headers:{"accept":"application/json"}
+  });
+
+  let data={};
+  try{
+    data=await response.json();
+  }catch(error){
+    throw new Error("Η υπηρεσία δεδομένων επέστρεψε μη έγκυρη απάντηση.");
   }
+
+  if(!response.ok){
+    throw new Error(data?.message || data?.errors?.rateLimit || `Σφάλμα HTTP ${response.status}`);
+  }
+
+  if(data.errors && Object.keys(data.errors).length){
+    const message=Object.values(data.errors).filter(Boolean).join(" ");
+    if(message) throw new Error(message);
+  }
+
   return data;
 }
 
@@ -1892,7 +1882,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv75_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv77_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!btn || !box) return;
 
@@ -2044,7 +2034,7 @@ async function analyzeFixture(fixtureId){
     syncFullAnalysisPanel(fixtureId,match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv75_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv77_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2306,8 +2296,8 @@ async function analyzeFinishedFixture(fixtureId){
 }
 
 async function loadFinishedResults(){
-  if(!settings.realData || !settings.apiKey){
-    setResultsStatus("Ενεργοποίησε πρώτα τα πραγματικά δεδομένα στις Ρυθμίσεις.","error");
+  if(!settings.realData){
+    setResultsStatus("Η υπηρεσία πραγματικών δεδομένων δεν είναι διαθέσιμη αυτή τη στιγμή.","error");
     return;
   }
   try{
@@ -2445,14 +2435,14 @@ function buildDateStrip(){
     selectedApiDate=btn.dataset.date;
     strip.querySelectorAll("[data-date]").forEach(b=>b.classList.toggle("active",b===btn));
     syncDayFiltersFromDate(selectedApiDate);
-    if(settings.realData && settings.apiKey) loadDateFromApi(selectedApiDate);
+    if(settings.realData) loadDateFromApi(selectedApiDate);
     else render();
   }));
 }
 
 function startLiveAutoRefresh(){
   stopLiveAutoRefresh();
-  if(settings.autoLive && settings.realData && settings.apiKey){
+  if(settings.autoLive && settings.realData){
     liveAutoTimer=setInterval(()=>{
       if(!document.getElementById("liveView").classList.contains("hidden")){
         loadLiveFromApi();
@@ -2512,8 +2502,8 @@ function init(){
   loadCachedCountryLeagues();
   renderLeagueChoices();
   renderStandings([]);
-  if(settings.realData && settings.apiKey) setTimeout(loadAllCountryLeagues,250);
-  if(settings.realData && settings.apiKey){
+  if(settings.realData) setTimeout(loadAllCountryLeagues,250);
+  if(settings.realData){
     const hasReal=Array.isArray(matches) && matches.some(m=>m.realData);
     if(!hasReal) setTimeout(loadTodayFromApi,300);
   }
@@ -2586,7 +2576,7 @@ function render(){
     currentFilter==="tomorrow"?"Αγώνες αύριο":"Αγώνες ημέρας";
   if(!data.length){
     list.innerHTML=settings.realData
-      ? '<div class="empty">Δεν υπάρχουν φορτωμένοι πραγματικοί αγώνες. Πήγαινε στις Ρυθμίσεις και πάτησε «Φόρτωση αγώνων».</div>'
+      ? '<div class="empty">Δεν βρέθηκαν διαθέσιμοι αγώνες για τα επιλεγμένα φίλτρα.</div>'
       : '<div class="empty">Δεν υπάρχουν αγώνες με αυτά τα φίλτρα.</div>';
     return;
   }
@@ -2988,7 +2978,7 @@ function getBaseLeaguesForCountry(countryLabel){
   return supportedLeagues.filter(x=>x.group===countryLabel);
 }
 async function loadCountryLeagues(apiCountry, countryLabel, cacheKey){
-  if(!settings.realData || !settings.apiKey) return;
+  if(!settings.realData) return;
 
   const previousCountryLeagues = getBaseLeaguesForCountry(countryLabel);
 
@@ -3294,11 +3284,7 @@ function isFreeSeasonRestriction(message){
 }
 
 async function fetchStandingsForSeason(leagueId,season){
-  const response=await fetch(`${API_BASE}/standings?league=${leagueId}&season=${season}`,{
-    headers:apiHeaders()
-  });
-  const data=await response.json();
-  if(!response.ok) throw new Error(`Σφάλμα HTTP ${response.status}`);
+  const data=await apiFetch(`/standings?league=${leagueId}&season=${season}`);
   const message=extractApiErrorMessage(data);
   if(message) {
     const err=new Error(message);
@@ -3328,8 +3314,8 @@ async function findAvailableFreeSeason(leagueId,preferredSeason){
 }
 
 async function loadStandingsFromApi(){
-  if(!settings.realData || !settings.apiKey){
-    setStandingsStatus("Ενεργοποίησε πρώτα τα πραγματικά δεδομένα στις Ρυθμίσεις.","error");
+  if(!settings.realData){
+    setStandingsStatus("Η υπηρεσία πραγματικών δεδομένων δεν είναι διαθέσιμη αυτή τη στιγμή.","error");
     renderStandings([]);
     return;
   }
@@ -3560,7 +3546,7 @@ function openLiveDetail(fixtureId){
   renderDetailStats(match);
   renderDetailLineups(match);
 
-  if(settings.realData && settings.apiKey){
+  if(settings.realData){
     enrichLiveMatch(fixtureId);
   }
 }
@@ -3745,7 +3731,7 @@ document.querySelectorAll(".chip[data-filter]").forEach(btn=>btn.addEventListene
 
   if(currentFilter==="today" || currentFilter==="tomorrow"){
     syncDateStripFromChip(currentFilter);
-    if(settings.realData && settings.apiKey){
+    if(settings.realData){
       loadDateFromApi(selectedApiDate);
       return;
     }
@@ -3775,24 +3761,14 @@ document.getElementById("refreshDetail").addEventListener("click",()=>{
 
 
 document.getElementById("refreshLive").addEventListener("click",()=>{
-  if(settings.realData && settings.apiKey) loadLiveFromApi();
+  if(settings.realData) loadLiveFromApi();
   else{
     document.getElementById("refreshLive").textContent="Έγινε";
     renderLive();
     setTimeout(()=>document.getElementById("refreshLive").textContent="Ανανέωση",900);
   }
 });
-document.getElementById("testApi").addEventListener("click",()=>{
-  settings.apiKey=document.getElementById("apiKey").value.trim();
-  testApiConnection();
-});
-document.getElementById("loadReal").addEventListener("click",()=>{
-  settings.apiKey=document.getElementById("apiKey").value.trim();
-  settings.realData=true;
-  localStorage.setItem("mv2_settings",JSON.stringify(settings));
-  applySettings();
-  loadTodayFromApi();
-});
+
 document.getElementById("leagueFilter").addEventListener("change",render);
 
 
@@ -4268,7 +4244,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv75_daily_${match.id}`;
+  const key=`mv77_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
@@ -4324,8 +4300,8 @@ function isUpcomingDailyFixture(item){
 
 async function loadAutomaticDailyPicks(force=false){
   if(dailyPicksLoading) return;
-  if(!settings.realData || !settings.apiKey){
-    setDailyPicksStatus("Ενεργοποίησε πραγματικά δεδομένα και αποθήκευσε το API Key στις Ρυθμίσεις.","error");
+  if(!settings.realData){
+    setDailyPicksStatus("Η υπηρεσία πραγματικών δεδομένων δεν είναι διαθέσιμη αυτή τη στιγμή.","error");
     renderDailyPicks();
     return;
   }
@@ -4467,7 +4443,7 @@ document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click
     syncDayFiltersFromDate(selectedApiDate);
     render();
   }
-  if(target==="live"){showView("liveView"); if(settings.realData && settings.apiKey) loadLiveFromApi(); else renderLive(); startLiveAutoRefresh()}
+  if(target==="live"){showView("liveView"); if(settings.realData) loadLiveFromApi(); else renderLive(); startLiveAutoRefresh()}
   if(target==="standings"){
     stopLiveAutoRefresh();
     closeAllStandingsCategories();
@@ -4497,22 +4473,18 @@ function applySettings(){
   document.body.classList.toggle("light",!!settings.light);
   document.getElementById("themeToggle").classList.toggle("on",!!settings.light);
   document.getElementById("notifToggle").classList.toggle("on",!!settings.notifications);
-  document.getElementById("realDataToggle").classList.toggle("on",!!settings.realData);
   document.getElementById("autoLiveToggle").classList.toggle("on",settings.autoLive!==false);
   document.getElementById("minConfidence").value=String(settings.minConfidence||0);
-  document.getElementById("apiKey").value=settings.apiKey||"";
 }
 document.getElementById("themeToggle").addEventListener("click",()=>{settings.light=!settings.light;applySettings()});
 document.getElementById("notifToggle").addEventListener("click",()=>{settings.notifications=!settings.notifications;applySettings()});
-document.getElementById("realDataToggle").addEventListener("click",()=>{settings.realData=!settings.realData;applySettings()});
 document.getElementById("autoLiveToggle").addEventListener("click",()=>{settings.autoLive=!settings.autoLive;applySettings();startLiveAutoRefresh()});
 document.getElementById("saveSettings").addEventListener("click",()=>{
   settings.minConfidence=Number(document.getElementById("minConfidence").value);
-  settings.apiKey=document.getElementById("apiKey").value.trim();
   localStorage.setItem("mv2_settings",JSON.stringify(settings));
   startLiveAutoRefresh();
   alert("Οι ρυθμίσεις αποθηκεύτηκαν.");
-  if(settings.realData && settings.apiKey) loadTodayFromApi();
+  if(settings.realData) loadTodayFromApi();
   render();
 });
 
