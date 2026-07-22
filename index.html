@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V78 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V79 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V78</title>
+  <title>MatchVision AI V79</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1025,7 +1025,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V78</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V79</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1174,10 +1174,10 @@
       <i class="api-dot"></i><span>Δεν έχουν φορτωθεί ακόμη επιλογές ημέρας</span>
     </div>
     <div class="daily-request-summary" id="dailyRequestSummary">
-      Αυτόματη ανάλυση: έως 20 αγώνες • Προτεραιότητα στα βασικά πρωταθλήματα
+      Ανάλυση έως 5 αγώνων • Προτεραιότητα στα βασικά πρωταθλήματα
     </div>
     <div class="refresh-info" id="dailyRefreshInfo">
-      Η ανανέωση μπορεί να χρησιμοποιήσει έως 21 αιτήματα API: 1 για το πρόγραμμα και έως 20 για προβλέψεις.
+      Η ανανέωση χρησιμοποιεί έως 6 αιτήματα: 1 για το πρόγραμμα και έως 5 για προβλέψεις.
     </div>
 
     <div class="daily-tabs">
@@ -1202,7 +1202,7 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V78</span>
+      <span>V79</span>
     </div>
 
     <div class="guide-grid">
@@ -1264,7 +1264,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V78</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V79</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1350,7 +1350,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V78 • Public fixed daily picks</div>
+      <div class="drawer-version">V79 • Stable fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1475,7 +1475,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv78_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv79_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1494,7 +1494,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv78_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv79_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1611,7 +1611,16 @@ function mapLive(item){
   };
 }
 
-async function apiFetch(path){
+function wait(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+function isRateLimitMessage(data,status){
+  const text=JSON.stringify(data||{}).toLowerCase();
+  return status===429 || text.includes("too many requests") || text.includes("ratelimit");
+}
+
+async function apiFetch(path,retry=true){
   const response=await fetch(`${API_BASE}${path}`,{
     headers:{"accept":"application/json"}
   });
@@ -1623,8 +1632,16 @@ async function apiFetch(path){
     throw new Error("Η υπηρεσία δεδομένων επέστρεψε μη έγκυρη απάντηση.");
   }
 
+  if(isRateLimitMessage(data,response.status)){
+    if(retry){
+      await wait(4500);
+      return apiFetch(path,false);
+    }
+    throw new Error("Η υπηρεσία δέχεται πολλά αιτήματα. Περίμενε λίγο και πάτησε ξανά.");
+  }
+
   if(!response.ok){
-    throw new Error(data?.message || data?.errors?.rateLimit || `Σφάλμα HTTP ${response.status}`);
+    throw new Error(data?.message || `Σφάλμα HTTP ${response.status}`);
   }
 
   if(data.errors && Object.keys(data.errors).length){
@@ -1886,7 +1903,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv78_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv79_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!btn || !box) return;
 
@@ -2038,7 +2055,7 @@ async function analyzeFixture(fixtureId){
     syncFullAnalysisPanel(fixtureId,match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv78_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv79_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2086,6 +2103,7 @@ async function loadDateFromApi(date){
     matches=real;
     localStorage.setItem("mv40_real_matches", JSON.stringify(real));
     localStorage.setItem("mv40_real_matches_date", date);
+    localStorage.setItem("mv40_real_matches_saved_at", String(Date.now()));
     selectedApiDate=date;
     currentFilter="today";
     buildDateStrip();
@@ -2095,7 +2113,16 @@ async function loadDateFromApi(date){
     document.getElementById("matchCount").textContent=real.length;
     setApiStatus(real.length?`${real.length} πραγματικοί αγώνες φορτώθηκαν`:"Δεν βρέθηκαν αγώνες για την επιλεγμένη ημέρα","ok");
   }catch(err){
-    setApiStatus(err.message,"error");
+    const cached=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
+    if(Array.isArray(cached) && cached.length){
+      matches=cached.map(normalizeCachedMatch);
+      populateLeagues();
+      render();
+      setApiStatus("Εμφανίζονται τα τελευταία αποθηκευμένα παιχνίδια. Η νέα ενημέρωση θα γίνει σε λίγο.","ok");
+    }else{
+      setApiStatus(err.message,"error");
+      render();
+    }
   }
 }
 
@@ -2480,8 +2507,11 @@ function init(){
   if(cachedDate) selectedApiDate=cachedDate;
   const today=new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Athens"});
   const cachedMatches=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
-  if(settings.realData && cachedDate===today && Array.isArray(cachedMatches) && cachedMatches.length){
+  if(settings.realData && Array.isArray(cachedMatches) && cachedMatches.length){
     matches=cachedMatches.map(normalizeCachedMatch);
+    if(cachedDate!==today){
+      selectedApiDate=today;
+    }
   }
 
   const cachedLive=JSON.parse(localStorage.getItem("mv40_live_matches") || "null");
@@ -2506,7 +2536,6 @@ function init(){
   loadCachedCountryLeagues();
   renderLeagueChoices();
   renderStandings([]);
-  if(settings.realData) setTimeout(loadAllCountryLeagues,250);
   if(settings.realData){
     const hasReal=Array.isArray(matches) && matches.some(m=>m.realData);
     if(!hasReal) setTimeout(loadTodayFromApi,300);
@@ -3811,7 +3840,7 @@ function setDailyPicksStatus(message,type=""){
 function updateDailyRequestSummary(extra=""){
   const el=document.getElementById("dailyRequestSummary");
   if(!el) return;
-  el.textContent=`Αιτήματα αυτής της φόρτωσης: ${dailyRequestsUsed} • Όριο αυτόματης ανάλυσης: 20 αγώνες${extra?` • ${extra}`:""}`;
+  el.textContent=`Αιτήματα αυτής της φόρτωσης: ${dailyRequestsUsed} • Όριο ανάλυσης: 5 αγώνες${extra?` • ${extra}`:""}`;
 }
 
 function updateDailyDateHeader(){
@@ -4248,7 +4277,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv78_daily_${match.id}`;
+  const key=`mv79_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
@@ -4334,20 +4363,17 @@ async function loadAutomaticDailyPicks(force=false){
       return;
     }
 
-    const candidates=fixtures.slice(0,20);
+    const candidates=fixtures.slice(0,5);
     dailyMatches=candidates;
     setDailyPicksStatus(`Αυτόματη ανάλυση 0/${candidates.length} αγώνων…`,"loading");
     updateDailyRequestSummary(`${fixtures.length} διαθέσιμοι αγώνες`);
 
-    await runWithConcurrency(
-      candidates,
-      3,
-      match=>fetchDailyPrediction(match,force),
-      (done,total)=>{
-        setDailyPicksStatus(`Αυτόματη ανάλυση ${done}/${total} αγώνων…`,"loading");
-        if(done%3===0) renderDailyPicks();
-      }
-    );
+    for(let i=0;i<candidates.length;i++){
+      await fetchDailyPrediction(candidates[i],force);
+      setDailyPicksStatus(`Ανάλυση ${i+1}/${candidates.length} αγώνων…`,"loading");
+      renderDailyPicks();
+      if(i<candidates.length-1) await wait(1200);
+    }
 
     const allAnalyzed=dailyMatches.filter(m=>hasPrediction(m)).length;
     const strictSafe=dailyMatches.filter(m=>isEligibleDailyMatch(m,"safe")).length;
@@ -4408,7 +4434,10 @@ document.addEventListener("click",event=>{
   if(target==="daily"){
     stopLiveAutoRefresh();
     showView("dailyPicksView");
-    loadAutomaticDailyPicks(false);
+    renderDailyPicks();
+    if(!dailyMatches.length){
+      setDailyPicksStatus("Πάτησε «Ανανέωση επιλογών» για να φορτωθούν έως 5 αναλύσεις.","");
+    }
   }
   if(target==="live"){
     showView("liveView");
@@ -4521,7 +4550,7 @@ document.querySelectorAll(".market-tab").forEach(btn=>btn.addEventListener("clic
   renderDailyPicks();
 }));
 document.getElementById("refreshDailyPicks")?.addEventListener("click",()=>{
-  const ok=confirm("Η ανανέωση μπορεί να χρησιμοποιήσει έως 21 αιτήματα API. Να συνεχιστεί;");
+  const ok=confirm("Η ανανέωση μπορεί να χρησιμοποιήσει έως 6 αιτήματα API. Να συνεχιστεί;");
   if(ok) loadAutomaticDailyPicks(true);
 });
 

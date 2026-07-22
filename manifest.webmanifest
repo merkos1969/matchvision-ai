@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V78 Public",
+  "name": "MatchVision AI V79 Stable",
   "short_name": "MatchVision",
-  "description": "Επαναφορά Αρχικής και Live Score στο πλαϊνό μενού",
+  "description": "Σταθερότερη δημόσια έκδοση με περιορισμό αιτημάτων και fallback cache",
   "lang": "el",
   "start_url": "./",
   "scope": "./",
