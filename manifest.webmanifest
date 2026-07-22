@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V83 Live Sync",
+  "name": "MatchVision AI V84 Clean Timeline",
   "short_name": "MatchVision",
-  "description": "Αυτόματος συγχρονισμός λεπτού, σκορ και Live ανάλυσης κάθε 20 δευτερόλεπτα",
+  "description": "Καθαρότερη Live χρονογραμμή με προτεραιότητα σε γκολ και κάρτες",
   "lang": "el",
   "start_url": "./",
   "scope": "./",

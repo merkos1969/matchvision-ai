@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V83 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V84 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V83</title>
+  <title>MatchVision AI V84</title>
   <style>
     :root{
       --bg:#06111d;
@@ -563,6 +563,29 @@
       .compact-pick b{font-size:14px!important}
     }
 
+
+    .timeline-group-title{
+      margin:8px 0 10px;
+      color:var(--accent);
+      font-weight:900;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .timeline-toggle{
+      width:100%;
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#12304a;
+      color:#fff;
+      font-weight:900;
+      font-size:14px;
+    }
+    .timeline-substitutions{
+      margin-top:12px;
+    }
+
     .analysis-note{
       margin-top:12px;padding:12px 13px;border-radius:14px;
       background:rgba(55,214,199,.07);border:1px solid rgba(55,214,199,.13)
@@ -1077,7 +1100,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V83</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V84</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1254,7 +1277,7 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V83</span>
+      >V84</span>
     </div>
 
     <div class="guide-grid">
@@ -1316,7 +1339,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V83</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3>>V84</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1402,7 +1425,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V83 • Live Sync fixed daily picks</div>
+      <div class="drawer-version">V84 • Clean Timeline fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1527,7 +1550,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv83_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv84_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1546,7 +1569,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv83_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv84_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1955,7 +1978,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv83_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv84_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!box) return;
 
@@ -2113,7 +2136,7 @@ async function analyzeFixture(fixtureId){
     updateQuickPick(match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv83_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv84_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -3652,22 +3675,90 @@ function renderDetailOverview(match){
     </div>`;
 }
 
+const expandedTimelineSubs=new Set();
+
+function timelineEventLabel(event){
+  const type=String(event.type||"").toLowerCase();
+  const detail=String(event.detail||"").toLowerCase();
+
+  if(type==="goal") return "Γκολ";
+  if(type==="card"){
+    if(detail.includes("red")) return "Κόκκινη κάρτα";
+    if(detail.includes("yellow")) return "Κίτρινη κάρτα";
+    return "Κάρτα";
+  }
+  if(type==="var") return "VAR";
+  if(type==="subst") return "Αλλαγή";
+  return event.type || "Γεγονός";
+}
+
+function timelineEventHtml(event){
+  const player=event.player?.name || event.detail || "—";
+  const assist=event.assist?.name
+    ? `<div class="hint">${String(event.type).toLowerCase()==="subst" ? "Μπήκε/βγήκε" : "Ασίστ"}: ${event.assist.name}</div>`
+    : "";
+
+  return `
+    <div class="timeline-item">
+      <div class="timeline-time">${event.time?.elapsed ?? "—"}'</div>
+      <div class="timeline-text">
+        <b>${timelineEventLabel(event)}</b><br>
+        ${player}
+        ${assist}
+      </div>
+    </div>`;
+}
+
+function toggleTimelineSubs(fixtureId){
+  const id=String(fixtureId);
+  if(expandedTimelineSubs.has(id)){
+    expandedTimelineSubs.delete(id);
+  }else{
+    expandedTimelineSubs.add(id);
+  }
+
+  const match=liveMatches.find(m=>String(m.id)===id);
+  if(match) renderDetailTimeline(match);
+}
+
 function renderDetailTimeline(match){
   const events=(match.raw?.events||[]);
   const el=document.getElementById("detail-timeline");
+
   if(!events.length){
     el.innerHTML='<div class="empty">Δεν υπάρχουν διαθέσιμα γεγονότα.</div>';
     return;
   }
-  el.innerHTML=`<div class="timeline">${events.map(e=>`
-    <div class="timeline-item">
-      <div class="timeline-time">${e.time?.elapsed ?? "—"}'</div>
-      <div class="timeline-text">
-        <b>${e.type || "Γεγονός"}</b><br>
-        ${e.player?.name || e.detail || "—"}
-        ${e.assist?.name ? `<div class="hint">Ασίστ: ${e.assist.name}</div>` : ""}
-      </div>
-    </div>`).join("")}</div>`;
+
+  const important=events.filter(event=>{
+    const type=String(event.type||"").toLowerCase();
+    return type!=="subst";
+  });
+
+  const substitutions=events.filter(event=>
+    String(event.type||"").toLowerCase()==="subst"
+  );
+
+  const expanded=expandedTimelineSubs.has(String(match.id));
+  const visibleSubs=expanded ? substitutions : substitutions.slice(0,4);
+
+  const importantHtml=important.length
+    ? `<div class="timeline-group-title">Γκολ, κάρτες και σημαντικά γεγονότα</div>
+       <div class="timeline">${important.map(timelineEventHtml).join("")}</div>`
+    : '<div class="empty">Δεν υπάρχουν ακόμη γκολ ή κάρτες.</div>';
+
+  const substitutionsHtml=substitutions.length
+    ? `<div class="timeline-substitutions">
+         <div class="timeline-group-title">Αλλαγές παικτών</div>
+         <div class="timeline">${visibleSubs.map(timelineEventHtml).join("")}</div>
+         ${substitutions.length>4 ? `
+           <button class="timeline-toggle" onclick="toggleTimelineSubs('${match.id}')">
+             ${expanded ? "Απόκρυψη αλλαγών" : `Προβολή όλων των αλλαγών (${substitutions.length})`}
+           </button>` : ""}
+       </div>`
+    : "";
+
+  el.innerHTML=importantHtml+substitutionsHtml;
 }
 
 function statValue(stats,name){
@@ -4495,7 +4586,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv83_daily_${match.id}`;
+  const key=`mv84_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
