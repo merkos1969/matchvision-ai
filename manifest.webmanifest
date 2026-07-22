@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V85 Request Optimized",
+  "name": "MatchVision AI V87 Menu Fix",
   "short_name": "MatchVision",
-  "description": "Μειωμένα API αιτήματα με on-demand Live στατιστικά",
+  "description": "Διόρθωση πλαϊνού μενού και μόνιμη εμφάνιση Ρυθμίσεων",
   "lang": "el",
   "start_url": "./",
   "scope": "./",

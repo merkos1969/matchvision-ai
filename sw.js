@@ -1,4 +1,4 @@
-const CACHE_NAME="matchvision-v85";
+const CACHE_NAME="matchvision-v87";
 const APP_SHELL=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
@@ -10,7 +10,7 @@ self.addEventListener("fetch",event=>{
   if(event.request.method!=="GET") return;
   const url=new URL(event.request.url);
   if(url.hostname.endsWith(".workers.dev")){
-    event.respondWith(fetch(event.request));
+    event.respondWith(fetch(event.request,{cache:"no-store"}));
     return;
   }
   event.respondWith(fetch(event.request)

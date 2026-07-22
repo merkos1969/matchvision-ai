@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V85 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V87 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V85</title>
+  <title>MatchVision AI V87</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1091,7 +1091,30 @@
       .daily-tab{font-size:12px;padding:9px 5px}
     }
     @media(max-width:460px){h1{font-size:28px}.stats{gap:6px}.stat{padding:10px 6px}.teams{gap:7px}.search-wrap{flex-direction:column}.install{padding:10px 16px;font-size:15px}.subtitle{font-size:13px;max-width:220px}.menu-btn{transition:width .18s ease,height .18s ease,margin-top .18s ease,font-size .18s ease;width:42px;height:42px;margin-top:3px}.drawer-title b{font-size:15px}.logo{width:52px;height:52px;margin-top:1px}.topbar{gap:10px;grid-template-columns:auto auto 1fr}}
-  </style>
+  
+#sideMenu{
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:110px!important;
+}
+#sideMenu .drawer-head{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:linear-gradient(180deg,#061523 85%,rgba(6,21,35,.96));
+}
+#sideMenu [data-nav="settings"]{
+  position:sticky;
+  bottom:12px;
+  z-index:6;
+  margin-top:14px;
+  background:#103244!important;
+  border:1px solid rgba(55,214,199,.35)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.28);
+}
+
+</style>
 </head>
 <body>
 <div class="app">
@@ -1100,7 +1123,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V85</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V87</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1431,7 +1454,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V85 • Request Optimized fixed daily picks</div>
+      <div class="drawer-version">V87 • Menu Fix fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1447,10 +1470,10 @@
   <button data-nav="history"><span class="nav-icon">▤</span><span class="nav-label">Αποτελέσματα</span></button>
 
   <div class="drawer-section-title">Εφαρμογή</div>
-  <button data-nav="guide"><span class="nav-icon">📘</span><span class="nav-label">Οδηγίες χρήσης</span></button>
   <button data-nav="settings"><span class="nav-icon">⚙</span><span class="nav-label">Ρυθμίσεις</span></button>
+  <button data-nav="guide"><span class="nav-icon">📘</span><span class="nav-label">Οδηγίες χρήσης</span></button>
 
-  <div class="nav-hint">Αρχική, Live Score, επιλογές ημέρας, βαθμολογίες, αποτελέσματα και ρυθμίσεις.</div>
+  <div class="nav-hint">Οι Ρυθμίσεις μένουν πάντα ορατές στο κάτω μέρος του μενού.</div>
   <div class="menu-footer">by Merkourios Kermanidis</div>
 </nav>
 
@@ -1556,7 +1579,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv85_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv87_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1575,7 +1598,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv85_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv87_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1702,27 +1725,49 @@ function isRateLimitMessage(data,status){
 }
 
 async function apiFetch(path,retry=true){
-  const response=await fetch(`${API_BASE}${path}`,{
-    headers:{"accept":"application/json"}
-  });
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),15000);
 
+  let response;
   let data={};
+
   try{
-    data=await response.json();
+    response=await fetch(`${API_BASE}${path}`,{
+      headers:{"accept":"application/json"},
+      signal:controller.signal,
+      cache:"no-store"
+    });
+
+    try{
+      data=await response.json();
+    }catch(error){
+      throw new Error("Η υπηρεσία δεδομένων επέστρεψε μη έγκυρη απάντηση.");
+    }
   }catch(error){
-    throw new Error("Η υπηρεσία δεδομένων επέστρεψε μη έγκυρη απάντηση.");
+    clearTimeout(timeoutId);
+
+    if(error?.name==="AbortError"){
+      throw new Error("Η φόρτωση καθυστέρησε. Πάτησε «Ξανά φόρτωση».");
+    }
+
+    throw new Error("Δεν ήταν δυνατή η σύνδεση με την υπηρεσία δεδομένων.");
+  }finally{
+    clearTimeout(timeoutId);
   }
 
   if(isRateLimitMessage(data,response.status)){
     if(retry){
-      await wait(4500);
+      await wait(5000);
       return apiFetch(path,false);
     }
-    throw new Error("Η υπηρεσία δέχεται πολλά αιτήματα. Περίμενε λίγο και πάτησε ξανά.");
+    throw new Error("Η υπηρεσία δέχεται πολλά αιτήματα. Περίμενε λίγο και πάτησε «Ξανά φόρτωση».");
   }
 
   if(!response.ok){
-    throw new Error(data?.message || `Σφάλμα HTTP ${response.status}`);
+    const rawMessage=data?.message || `Σφάλμα HTTP ${response.status}`;
+    throw new Error(rawMessage==="Endpoint not allowed"
+      ? "Ο Cloudflare Worker χρειάζεται ενημέρωση."
+      : rawMessage);
   }
 
   if(data.errors && Object.keys(data.errors).length){
@@ -1984,7 +2029,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv85_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv87_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!box) return;
 
@@ -2142,7 +2187,7 @@ async function analyzeFixture(fixtureId){
     updateQuickPick(match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv85_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv87_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -2222,8 +2267,8 @@ async function loadDateFromApi(date){
     }else{
       matches=[];
       populateLeagues();
-      render();
       setApiStatus(err.message,"error");
+      render();
     }
   }
 }
@@ -2830,7 +2875,10 @@ function render(){
     const statusText=document.getElementById("apiStatus")?.textContent||"";
     const loading=statusText.includes("Φόρτωση");
     list.innerHTML=settings.realData
-      ? `<div class="empty">${loading ? "Γίνεται φόρτωση των σημερινών αγώνων…" : "Δεν βρέθηκαν διαθέσιμοι αγώνες για τα επιλεγμένα φίλτρα."}</div>`
+      ? `<div class="empty">
+          <div>${loading ? "Γίνεται φόρτωση των σημερινών αγώνων…" : "Δεν βρέθηκαν διαθέσιμοι αγώνες για τα επιλεγμένα φίλτρα."}</div>
+          ${loading ? "" : '<button class="small-btn" style="margin-top:14px" onclick="loadTodayFromApi()">Ξανά φόρτωση</button>'}
+        </div>`
       : '<div class="empty">Δεν υπάρχουν αγώνες με αυτά τα φίλτρα.</div>';
     return;
   }
@@ -4619,7 +4667,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv85_daily_${match.id}`;
+  const key=`mv87_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
