@@ -1,7 +1,7 @@
 {
-  "name": "MatchVision AI V77 Public",
+  "name": "MatchVision AI V78 Public",
   "short_name": "MatchVision",
-  "description": "Δημόσια έκδοση με απλοποιημένες οδηγίες χρήσης",
+  "description": "Επαναφορά Αρχικής και Live Score στο πλαϊνό μενού",
   "lang": "el",
   "start_url": "./",
   "scope": "./",

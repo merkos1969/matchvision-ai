@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V77 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V78 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V77</title>
+  <title>MatchVision AI V78</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1025,7 +1025,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V77</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V78</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1202,7 +1202,7 @@
   <section id="guideView" class="hidden">
     <div class="section-title">
       <h3>Οδηγίες χρήσης</h3>
-      <span>V77</span>
+      <span>V78</span>
     </div>
 
     <div class="guide-grid">
@@ -1264,7 +1264,7 @@
   </section>
 
 <section id="settingsView" class="hidden">
-    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V77</span></div>
+    <div class="section-title"><h3>Ρυθμίσεις</h3><span>V78</span></div>
     <div class="card">
       <div class="toggle-row">
         <div><b>Φωτεινή εμφάνιση</b><div class="hint">Αλλαγή χρωμάτων εφαρμογής</div></div>
@@ -1350,22 +1350,26 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V77 • Public fixed daily picks</div>
+      <div class="drawer-version">V78 • Public fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
 
+  <div class="drawer-section-title">Κύριο μενού</div>
+  <button class="active" data-nav="matches"><span class="nav-icon">🏠</span><span class="nav-label">Αρχική – Αγώνες</span></button>
+  <button data-nav="live"><span class="nav-icon">🔴</span><span class="nav-label">Live Score</span></button>
+  <button data-nav="daily"><span class="nav-icon">🎯</span><span class="nav-label">Επιλογές ημέρας</span></button>
+
   <div class="drawer-section-title">Περισσότερα</div>
-      <button data-nav="standings"><span class="nav-icon">🏆</span><span class="nav-label">Βαθμολογίες</span></button>
+  <button data-nav="standings"><span class="nav-icon">🏆</span><span class="nav-label">Βαθμολογίες</span></button>
   <button data-nav="favorites"><span class="nav-icon">★</span><span class="nav-label">Αγαπημένα</span></button>
   <button data-nav="history"><span class="nav-icon">▤</span><span class="nav-label">Αποτελέσματα</span></button>
 
   <div class="drawer-section-title">Εφαρμογή</div>
-  <button data-nav="daily"><span class="nav-icon">🎯</span><span class="nav-label">Επιλογές ημέρας</span></button>
   <button data-nav="guide"><span class="nav-icon">📘</span><span class="nav-label">Οδηγίες χρήσης</span></button>
   <button data-nav="settings"><span class="nav-icon">⚙</span><span class="nav-label">Ρυθμίσεις</span></button>
 
-  <div class="nav-hint">Βαθμολογίες, αποτελέσματα, αγαπημένα, οδηγίες και ρυθμίσεις.</div>
+  <div class="nav-hint">Αρχική, Live Score, επιλογές ημέρας, βαθμολογίες, αποτελέσματα και ρυθμίσεις.</div>
   <div class="menu-footer">by Merkourios Kermanidis</div>
 </nav>
 
@@ -1471,7 +1475,7 @@ let liveMatches = [
 ];
 
 let historyData = [];
-let savedPredictions = JSON.parse(localStorage.getItem("mv77_saved_predictions") || "[]");
+let savedPredictions = JSON.parse(localStorage.getItem("mv78_saved_predictions") || "[]");
 
 function savePredictionRecord(match){
   if(!match?.id || !match?.analyzed) return;
@@ -1490,7 +1494,7 @@ function savePredictionRecord(match){
   if(index>=0) savedPredictions[index]=record;
   else savedPredictions.push(record);
 
-  localStorage.setItem("mv77_saved_predictions",JSON.stringify(savedPredictions));
+  localStorage.setItem("mv78_saved_predictions",JSON.stringify(savedPredictions));
 }
 
 function updateAccuracySummary(){
@@ -1882,7 +1886,7 @@ function syncFullAnalysisPanel(fixtureId,match){
 
 async function analyzeFixture(fixtureId){
   const btn=document.getElementById(`analyze-${fixtureId}`);
-  const cached=JSON.parse(localStorage.getItem(`mv77_analysis_${fixtureId}`) || "null");
+  const cached=JSON.parse(localStorage.getItem(`mv78_analysis_${fixtureId}`) || "null");
   const box=document.getElementById(`prediction-${fixtureId}`);
   if(!btn || !box) return;
 
@@ -2034,7 +2038,7 @@ async function analyzeFixture(fixtureId){
     syncFullAnalysisPanel(fixtureId,match);
     savePredictionRecord(match);
 
-    localStorage.setItem(`mv77_analysis_${fixtureId}`,JSON.stringify({
+    localStorage.setItem(`mv78_analysis_${fixtureId}`,JSON.stringify({
       savedAt:Date.now(),
       html:box.innerHTML,
       model: match ? {
@@ -4244,7 +4248,7 @@ async function fetchDailyPrediction(match,force=false){
     return false;
   }
 
-  const key=`mv77_daily_${match.id}`;
+  const key=`mv78_daily_${match.id}`;
   if(!force){
     const cached=JSON.parse(localStorage.getItem(key)||"null");
     if(cached && Date.now()-cached.savedAt<6*60*60*1000 && cached.model){
@@ -4434,6 +4438,9 @@ document.addEventListener("click",event=>{
 });
 
 document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click",()=>{
+  if(btn.dataset.nav){
+    document.querySelectorAll('#sideMenu [data-nav]').forEach(x=>x.classList.toggle("active",x===btn));
+  }
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
   closeMenu();
   const target=btn.dataset.nav;
