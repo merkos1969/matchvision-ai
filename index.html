@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V88 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V88.1 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
   <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
-  <title>MatchVision AI V88 Stable</title>
+  <title>MatchVision AI V88.1 Stable</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1114,6 +1114,38 @@
   box-shadow:0 8px 22px rgba(0,0,0,.28);
 }
 
+
+    /* V88.1 — Σημερινές προτάσεις */
+    .home-safe-box{
+      margin:12px 0 16px;
+      padding:14px;
+      border-radius:20px;
+      background:linear-gradient(135deg,rgba(55,214,199,.14),rgba(75,125,255,.08));
+      border:1px solid rgba(55,214,199,.22);
+      box-shadow:var(--shadow);
+    }
+    .home-safe-head{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px
+    }
+    .home-safe-head h3{margin:0;font-size:20px}
+    .home-safe-status{font-size:11px;color:var(--muted)}
+    .home-safe-list{display:grid;gap:8px}
+    .home-safe-row{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+      padding:10px 11px;border-radius:14px;background:rgba(0,0,0,.13);
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .home-safe-match{min-width:0;font-weight:800;font-size:13px;line-height:1.3}
+    .home-safe-match small{display:block;color:var(--muted);font-size:10px;margin-top:3px;font-weight:600}
+    .home-safe-right{text-align:center}
+    .home-safe-pick{
+      min-width:52px;padding:8px 10px;border-radius:12px;
+      background:rgba(55,214,199,.13);border:1px solid rgba(55,214,199,.22);
+      color:var(--accent);font-size:17px;font-weight:900
+    }
+    .home-safe-confidence{font-size:10px;color:var(--ok);font-weight:900;margin-top:3px}
+    .home-safe-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
+
 </style>
 </head>
 <body>
@@ -1123,7 +1155,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V88</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V88.1</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1146,6 +1178,20 @@
   </section>
 
   <section id="matchesView">
+    <section class="home-safe-box" id="homeSafeBox">
+      <div class="home-safe-head">
+        <h3>Σημερινές προτάσεις</h3>
+        <span class="home-safe-status" id="homeSafeStatus">Αναμονή αγώνων</span>
+      </div>
+      <div class="home-safe-list" id="homeSafeList">
+        <div class="home-safe-row">
+          <div class="home-safe-match">Οι 3 προτάσεις θα εμφανιστούν αυτόματα.</div>
+          <div class="home-safe-right"><div class="home-safe-pick">—</div></div>
+        </div>
+      </div>
+      <div class="home-safe-note">Φορτώνονται μόνο 3 αναλύσεις για να παραμένει γρήγορη η εφαρμογή.</div>
+    </section>
+
     <div class="search-wrap">
       <input id="searchInput" placeholder="Αναζήτηση ομάδας ή πρωταθλήματος">
       <select id="leagueFilter">
@@ -2241,6 +2287,75 @@ async function testApiConnection(){
   }
 }
 
+
+function homeSafeDoubleChance(match){
+  if(!match || !Array.isArray(match.p) || match.p.length<3) return "—";
+  const [home,draw,away]=match.p.map(Number);
+  if(![home,draw,away].every(Number.isFinite)) return "—";
+  const lowest=Math.min(home,draw,away);
+  if(away===lowest) return "1Χ";
+  if(home===lowest) return "Χ2";
+  return "12";
+}
+
+function renderHomeSafePicks(items=[],loading=false){
+  const list=document.getElementById("homeSafeList");
+  const status=document.getElementById("homeSafeStatus");
+  if(!list || !status) return;
+
+  if(!items.length){
+    status.textContent=loading ? "Φόρτωση…" : "Δεν υπάρχουν διαθέσιμες προτάσεις";
+    list.innerHTML=`
+      <div class="home-safe-row">
+        <div class="home-safe-match">${loading ? "Γίνεται ανάλυση μόνο 3 αγώνων…" : "Δεν βρέθηκαν προβλέψεις για τους πρώτους αγώνες."}</div>
+        <div class="home-safe-right"><div class="home-safe-pick">—</div></div>
+      </div>`;
+    return;
+  }
+
+  status.textContent=`${items.length}/3 έτοιμες`;
+  list.innerHTML=items.map((m,index)=>`
+    <div class="home-safe-row">
+      <div class="home-safe-match">
+        ${index+1}. ${m.home} – ${m.away}
+        <small>${m.league||""} • ${m.time||""}</small>
+      </div>
+      <div class="home-safe-right">
+        <div class="home-safe-pick">${homeSafeDoubleChance(m)}</div>
+        <div class="home-safe-confidence">${Math.round(Number(m.confidence||0))}%</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+let homeSafeLoading=false;
+async function loadHomeSafePicks(force=false){
+  if(homeSafeLoading || !settings.realData) return;
+  const candidates=(matches||[])
+    .filter(m=>m?.realData && (!Number.isFinite(m.kickoffTimestamp) || m.kickoffTimestamp>Date.now()-10*60*1000))
+    .slice(0,3);
+
+  if(!candidates.length){
+    renderHomeSafePicks([],false);
+    return;
+  }
+
+  homeSafeLoading=true;
+  renderHomeSafePicks([],true);
+
+  const ready=[];
+  for(const match of candidates){
+    const ok=await fetchDailyPrediction(match,force);
+    if(ok && hasPrediction(match)){
+      ready.push(match);
+      renderHomeSafePicks(ready,true);
+    }
+  }
+
+  renderHomeSafePicks(ready,false);
+  homeSafeLoading=false;
+}
+
 async function loadDateFromApi(date){
   try{
     setApiStatus("Φόρτωση πραγματικών αγώνων…","loading");
@@ -2258,6 +2373,7 @@ async function loadDateFromApi(date){
     render();
     document.getElementById("matchCount").textContent=real.length;
     setApiStatus(real.length?`${real.length} πραγματικοί αγώνες φορτώθηκαν`:"Δεν βρέθηκαν αγώνες για την επιλεγμένη ημέρα","ok");
+    setTimeout(()=>loadHomeSafePicks(false),250);
   }catch(err){
     const cached=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
     const cachedDate=localStorage.getItem("mv40_real_matches_date");
@@ -2269,6 +2385,7 @@ async function loadDateFromApi(date){
       populateLeagues();
       render();
       setApiStatus("Εμφανίζονται οι αποθηκευμένοι αγώνες της ημέρας. Η ενημέρωση θα δοκιμαστεί ξανά αργότερα.","ok");
+      setTimeout(()=>loadHomeSafePicks(false),250);
     }else{
       matches=[];
       populateLeagues();
