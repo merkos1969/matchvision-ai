@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V89 Smart Picks - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V89.1 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
   <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
-  <title>MatchVision AI V89 Smart Picks</title>
+  <title>MatchVision AI V89.1 Stable</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1131,7 +1131,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V89</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V89.1</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1462,7 +1462,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V89 • Smart Picks</div>
+      <div class="drawer-version">V89.1 • Stable</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1727,65 +1727,108 @@ function wait(ms){
   return new Promise(resolve=>setTimeout(resolve,ms));
 }
 
+const API_RATE_COOLDOWN_MS=90*1000;
+const apiRequestsInFlight=new Map();
+let fixturesLoadBusy=false;
+
+function getApiCooldownUntil(){
+  return Number(localStorage.getItem("mv891_api_cooldown_until")||0);
+}
+
+function getApiCooldownSeconds(){
+  return Math.max(0,Math.ceil((getApiCooldownUntil()-Date.now())/1000));
+}
+
+function setApiCooldown(ms=API_RATE_COOLDOWN_MS){
+  localStorage.setItem("mv891_api_cooldown_until",String(Date.now()+ms));
+  updateRetryButtons();
+}
+
+function apiCooldownMessage(){
+  const seconds=getApiCooldownSeconds();
+  return seconds>0
+    ? `Προσωρινή αναμονή ${seconds}΄΄ λόγω ορίου αιτημάτων.`
+    : "Η υπηρεσία είναι ξανά διαθέσιμη για νέα προσπάθεια.";
+}
+
+function updateRetryButtons(){
+  const seconds=getApiCooldownSeconds();
+  document.querySelectorAll("[data-api-retry]").forEach(btn=>{
+    btn.disabled=seconds>0 || fixturesLoadBusy;
+    btn.textContent=fixturesLoadBusy ? "Φόρτωση…" : (seconds>0 ? `Ξανά φόρτωση σε ${seconds}΄΄` : "Ξανά φόρτωση");
+  });
+}
+
+setInterval(updateRetryButtons,1000);
+
 function isRateLimitMessage(data,status){
   const text=JSON.stringify(data||{}).toLowerCase();
   return status===429 || text.includes("too many requests") || text.includes("ratelimit");
 }
 
-async function apiFetch(path,retry=true){
-  const controller=new AbortController();
-  const timeoutId=setTimeout(()=>controller.abort(),15000);
+async function apiFetch(path){
+  const cooldownSeconds=getApiCooldownSeconds();
+  if(cooldownSeconds>0){
+    throw new Error(apiCooldownMessage());
+  }
 
-  let response;
-  let data={};
+  if(apiRequestsInFlight.has(path)) return apiRequestsInFlight.get(path);
 
-  try{
-    response=await fetch(`${API_BASE}${path}`,{
-      headers:{"accept":"application/json"},
-      signal:controller.signal,
-      cache:"no-store"
-    });
+  const request=(async()=>{
+    const controller=new AbortController();
+    const timeoutId=setTimeout(()=>controller.abort(),15000);
+    let response;
+    let data={};
 
     try{
-      data=await response.json();
+      response=await fetch(`${API_BASE}${path}`,{
+        headers:{"accept":"application/json"},
+        signal:controller.signal,
+        cache:"no-store"
+      });
+
+      try{
+        data=await response.json();
+      }catch(error){
+        throw new Error("Η υπηρεσία δεδομένων επέστρεψε μη έγκυρη απάντηση.");
+      }
     }catch(error){
-      throw new Error("Η υπηρεσία δεδομένων επέστρεψε μη έγκυρη απάντηση.");
+      if(error?.name==="AbortError"){
+        throw new Error("Η φόρτωση καθυστέρησε. Δοκίμασε ξανά σε λίγο.");
+      }
+      if(error instanceof Error && error.message.includes("υπηρεσία δεδομένων")) throw error;
+      throw new Error("Δεν ήταν δυνατή η σύνδεση με την υπηρεσία δεδομένων.");
+    }finally{
+      clearTimeout(timeoutId);
     }
-  }catch(error){
-    clearTimeout(timeoutId);
 
-    if(error?.name==="AbortError"){
-      throw new Error("Η φόρτωση καθυστέρησε. Πάτησε «Ξανά φόρτωση».");
+    if(isRateLimitMessage(data,response.status)){
+      setApiCooldown();
+      throw new Error(apiCooldownMessage());
     }
 
-    throw new Error("Δεν ήταν δυνατή η σύνδεση με την υπηρεσία δεδομένων.");
+    if(!response.ok){
+      const rawMessage=data?.message || `Σφάλμα HTTP ${response.status}`;
+      throw new Error(rawMessage==="Endpoint not allowed"
+        ? "Ο Cloudflare Worker χρειάζεται ενημέρωση."
+        : rawMessage);
+    }
+
+    if(data.errors && Object.keys(data.errors).length){
+      const message=Object.values(data.errors).filter(Boolean).join(" ");
+      if(message) throw new Error(message);
+    }
+
+    return data;
+  })();
+
+  apiRequestsInFlight.set(path,request);
+  try{
+    return await request;
   }finally{
-    clearTimeout(timeoutId);
+    apiRequestsInFlight.delete(path);
   }
-
-  if(isRateLimitMessage(data,response.status)){
-    if(retry){
-      await wait(5000);
-      return apiFetch(path,false);
-    }
-    throw new Error("Η υπηρεσία δέχεται πολλά αιτήματα. Περίμενε λίγο και πάτησε «Ξανά φόρτωση».");
-  }
-
-  if(!response.ok){
-    const rawMessage=data?.message || `Σφάλμα HTTP ${response.status}`;
-    throw new Error(rawMessage==="Endpoint not allowed"
-      ? "Ο Cloudflare Worker χρειάζεται ενημέρωση."
-      : rawMessage);
-  }
-
-  if(data.errors && Object.keys(data.errors).length){
-    const message=Object.values(data.errors).filter(Boolean).join(" ");
-    if(message) throw new Error(message);
-  }
-
-  return data;
 }
-
 
 function pct(value){
   if(value===null || value===undefined || value==="") return null;
@@ -2250,6 +2293,9 @@ async function testApiConnection(){
 }
 
 async function loadDateFromApi(date){
+  if(fixturesLoadBusy) return;
+  fixturesLoadBusy=true;
+  updateRetryButtons();
   try{
     setApiStatus("Φόρτωση πραγματικών αγώνων…","loading");
     const data=await apiFetch(`/fixtures?date=${date}&timezone=Europe%2FAthens`);
@@ -2261,8 +2307,8 @@ async function loadDateFromApi(date){
     selectedApiDate=date;
     currentFilter="today";
     buildDateStrip();
-  syncDayFiltersFromDate(selectedApiDate);
-  populateLeagues();
+    syncDayFiltersFromDate(selectedApiDate);
+    populateLeagues();
     render();
     document.getElementById("matchCount").textContent=real.length;
     setApiStatus(real.length?`${real.length} πραγματικοί αγώνες φορτώθηκαν`:"Δεν βρέθηκαν αγώνες για την επιλεγμένη ημέρα","ok");
@@ -2276,13 +2322,16 @@ async function loadDateFromApi(date){
       syncDayFiltersFromDate(date);
       populateLeagues();
       render();
-      setApiStatus("Εμφανίζονται οι αποθηκευμένοι αγώνες της ημέρας. Η ενημέρωση θα δοκιμαστεί ξανά αργότερα.","ok");
+      setApiStatus(`Εμφανίζονται ${matches.length} αποθηκευμένοι αγώνες. ${err.message}`,"ok");
     }else{
-      matches=[];
+      // Δεν διαγράφουμε δεδομένα που ήδη εμφανίζονται λόγω προσωρινού σφάλματος API.
       populateLeagues();
       setApiStatus(err.message,"error");
       render();
     }
+  }finally{
+    fixturesLoadBusy=false;
+    updateRetryButtons();
   }
 }
 
@@ -2579,7 +2628,14 @@ async function loadLiveFromApi(){
     syncOpenLiveDetail(false);
     setApiStatus(liveMatches.length?`${liveMatches.length} αγώνες είναι Live`:"Δεν υπάρχουν Live αγώνες τώρα","ok");
   }catch(err){
-    setApiStatus(err.message,"error");
+    const cached=JSON.parse(localStorage.getItem("mv40_live_matches") || "null");
+    if(Array.isArray(cached) && cached.length){
+      liveMatches=cached;
+      renderLive();
+      setApiStatus(`Εμφανίζονται αποθηκευμένα Live δεδομένα. ${err.message}`,"ok");
+    }else{
+      setApiStatus(err.message,"error");
+    }
   }
 }
 
@@ -2734,8 +2790,12 @@ function init(){
   renderStandings([]);
   if(settings.realData){
     if(!hasTodayCache){
-      setApiStatus("Φόρτωση σημερινών αγώνων…","loading");
-      setTimeout(loadTodayFromApi,300);
+      if(getApiCooldownSeconds()>0){
+        setApiStatus(apiCooldownMessage(),"error");
+      }else{
+        setApiStatus("Φόρτωση σημερινών αγώνων…","loading");
+        setTimeout(loadTodayFromApi,300);
+      }
     }
   }
 }
@@ -2870,8 +2930,13 @@ async function runAutomaticPredictionQueue(){
     if(match && !hasPrediction(match)){
       try{
         await analyzeFixture(Number(id));
-      }catch(error){}
-      await wait(1800);
+      }catch(error){
+        if(getApiCooldownSeconds()>0){
+          autoPredictionQueue.length=0;
+          break;
+        }
+      }
+      await wait(2200);
     }
   }
 
@@ -2921,7 +2986,7 @@ function render(){
     list.innerHTML=settings.realData
       ? `<div class="empty">
           <div>${loading ? "Γίνεται φόρτωση των σημερινών αγώνων…" : "Δεν βρέθηκαν διαθέσιμοι αγώνες για τα επιλεγμένα φίλτρα."}</div>
-          ${loading ? "" : '<button class="small-btn" style="margin-top:14px" onclick="loadTodayFromApi()">Ξανά φόρτωση</button>'}
+          ${loading ? "" : '<button class="small-btn" style="margin-top:14px" data-api-retry onclick="loadTodayFromApi()">Ξανά φόρτωση</button>'}
         </div>`
       : '<div class="empty">Δεν υπάρχουν αγώνες με αυτά τα φίλτρα.</div>';
     return;
