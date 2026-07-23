@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V89.1 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V90 - Λίστα Αγώνων και Διπλά Προγνωστικά" />
   <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
   <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
-  <title>MatchVision AI V89.1 Stable</title>
+  <title>MatchVision AI V90 Safe Picks</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1122,6 +1122,48 @@
   box-shadow:0 8px 22px rgba(0,0,0,.28);
 }
 
+
+
+    /* V90 Safe Picks List */
+    .section-title{
+      display:grid!important;grid-template-columns:minmax(0,1fr) 132px!important;
+      gap:10px!important;align-items:end!important;margin:10px 2px 8px!important
+    }
+    .section-title h3::after{
+      content:"ΑΓΩΝΑΣ";display:block;margin-top:5px;color:var(--muted);
+      font-size:10px;letter-spacing:.8px;font-weight:900
+    }
+    .section-title span{
+      text-align:center!important;color:var(--accent)!important;font-size:10px!important;
+      letter-spacing:.6px!important;font-weight:900!important
+    }
+    .section-title span::before{content:"ΔΙΠΛΟ ΠΡΟΓΝΩΣΤΙΚΟ"}
+    .section-title span{font-size:0!important}
+    .section-title span::before{font-size:10px!important}
+    .match-list{gap:7px!important}
+    .compact-match{
+      grid-template-columns:minmax(0,1fr) 132px!important;gap:10px!important;
+      padding:10px 11px!important;border-radius:14px!important;
+      background:linear-gradient(180deg,rgba(16,38,58,.98),rgba(7,24,39,.98))!important
+    }
+    .compact-league{margin-bottom:4px!important;font-size:9px!important}
+    .compact-team{display:flex!important;align-items:center!important;gap:7px!important;font-size:13px!important;margin:2px 0!important}
+    .compact-team .team-logo{width:22px!important;height:22px!important;margin:0!important;flex:0 0 22px!important}
+    .compact-sub{font-size:9px!important;margin-top:4px!important}
+    .compact-side{align-self:stretch!important;display:flex!important;align-items:center!important}
+    .compact-pick{
+      min-height:66px!important;height:100%!important;border-radius:13px!important;
+      border:1px solid rgba(55,214,199,.24)!important;
+      background:linear-gradient(135deg,rgba(55,214,199,.20),rgba(45,156,197,.12))!important
+    }
+    .compact-pick b{font-size:18px!important;color:var(--accent)!important}
+    .compact-pick span{font-size:9px!important}
+    .compact-side .fav{top:5px!important;right:5px!important;font-size:17px!important;width:28px!important;height:28px!important}
+    @media(max-width:420px){
+      .section-title,.compact-match{grid-template-columns:minmax(0,1fr) 112px!important}
+      .compact-pick b{font-size:16px!important}
+    }
+
 </style>
 </head>
 <body>
@@ -1131,7 +1173,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V89.1</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V90</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1462,7 +1504,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V89.1 • Stable</div>
+      <div class="drawer-version">V90 • Safe Picks List</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1732,7 +1774,7 @@ const apiRequestsInFlight=new Map();
 let fixturesLoadBusy=false;
 
 function getApiCooldownUntil(){
-  return Number(localStorage.getItem("mv891_api_cooldown_until")||0);
+  return Number(localStorage.getItem("mv90_api_cooldown_until")||0);
 }
 
 function getApiCooldownSeconds(){
@@ -1740,7 +1782,7 @@ function getApiCooldownSeconds(){
 }
 
 function setApiCooldown(ms=API_RATE_COOLDOWN_MS){
-  localStorage.setItem("mv891_api_cooldown_until",String(Date.now()+ms));
+  localStorage.setItem("mv90_api_cooldown_until",String(Date.now()+ms));
   updateRetryButtons();
 }
 
@@ -1760,6 +1802,20 @@ function updateRetryButtons(){
 }
 
 setInterval(updateRetryButtons,1000);
+setInterval(()=>{
+  const seconds=getApiCooldownSeconds();
+  document.querySelectorAll('.auto-pick-error').forEach(quick=>{
+    const title=quick.querySelector('b');
+    const subtitle=quick.querySelector('span');
+    if(seconds>0){
+      if(title) title.textContent='Προσωρινή αναμονή';
+      if(subtitle) subtitle.textContent=`Νέα προσπάθεια σε ${seconds}΄΄`;
+    }else{
+      if(title) title.textContent='Πάτησε ξανά';
+      if(subtitle) subtitle.textContent='Για προγνωστικό';
+    }
+  });
+},1000);
 
 function isRateLimitMessage(data,status){
   const text=JSON.stringify(data||{}).toLowerCase();
@@ -2272,9 +2328,11 @@ async function analyzeFixture(fixtureId){
     if(quick){
       quick.classList.remove("auto-pick-loading");
       quick.classList.add("auto-pick-error");
-      quick.querySelector("b").textContent="Μη διαθέσιμο";
-      quick.querySelector("span").textContent="Πάτησε για δοκιμή";
+      const seconds=getApiCooldownSeconds();
+      quick.querySelector("b").textContent=seconds>0 ? "Προσωρινή αναμονή" : "Πάτησε ξανά";
+      quick.querySelector("span").textContent=seconds>0 ? `Νέα προσπάθεια σε ${seconds}΄΄` : "Για προγνωστικό";
     }
+    autoPredictionQueued.delete(String(fixtureId));
   }
 }
 
@@ -2927,16 +2985,25 @@ async function runAutomaticPredictionQueue(){
     const id=autoPredictionQueue.shift();
     const match=matches.find(m=>String(m.id)===String(id));
 
-    if(match && !hasPrediction(match)){
-      try{
+    try{
+      if(match && !hasPrediction(match)){
         await analyzeFixture(Number(id));
-      }catch(error){
-        if(getApiCooldownSeconds()>0){
-          autoPredictionQueue.length=0;
-          break;
-        }
+        await wait(3200);
       }
-      await wait(2200);
+    }finally{
+      // Επιτρέπει νέα προσπάθεια όταν η πρώτη απέτυχε ή υπήρχε προσωρινό όριο API.
+      autoPredictionQueued.delete(String(id));
+    }
+
+    if(getApiCooldownSeconds()>0){
+      const retryIds=autoPredictionQueue.splice(0);
+      retryIds.forEach(retryId=>autoPredictionQueued.delete(String(retryId)));
+      const retryAfter=(getApiCooldownSeconds()+2)*1000;
+      setTimeout(()=>{
+        const allCards=[...document.querySelectorAll('[data-auto-prediction]')];
+        allCards.forEach(card=>queueAutomaticPrediction(card.dataset.autoPrediction));
+      },retryAfter);
+      break;
     }
   }
 
@@ -2944,31 +3011,23 @@ async function runAutomaticPredictionQueue(){
 }
 
 function observeAutomaticPredictions(){
+  // V90: όλα τα διπλά προγνωστικά εμφανίζονται αυτόματα δίπλα σε κάθε αγώνα.
+  // Δεν απαιτείται πάτημα σε καμία κάρτα. Η ουρά εκτελείται διαδοχικά
+  // ώστε να περιορίζονται τα αιτήματα προς το API.
   autoPredictionObserver?.disconnect();
+  autoPredictionObserver=null;
 
-  autoPredictionObserver=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting) return;
-      const id=entry.target.dataset.autoPrediction;
-      queueAutomaticPrediction(id);
-      autoPredictionObserver.unobserve(entry.target);
-    });
-  },{
-    root:null,
-    rootMargin:"220px 0px",
-    threshold:0.01
-  });
-
-  document.querySelectorAll("[data-auto-prediction]").forEach((card,index)=>{
-    if(index<5) autoPredictionObserver.observe(card);
-    else{
-      const id=card.dataset.autoPrediction;
-      const quick=document.getElementById(`quick-pick-${id}`);
-      if(quick && quick.classList.contains("auto-pick-loading")){
-        quick.querySelector("b").textContent="Πάτησε";
-        quick.querySelector("span").textContent="Για προγνωστικό";
-      }
+  const cards=[...document.querySelectorAll("[data-auto-prediction]")];
+  cards.forEach(card=>{
+    const id=card.dataset.autoPrediction;
+    const quick=document.getElementById(`quick-pick-${id}`);
+    if(quick && quick.classList.contains("auto-pick-loading")){
+      const title=quick.querySelector("b");
+      const subtitle=quick.querySelector("span");
+      if(title) title.textContent="Φόρτωση…";
+      if(subtitle) subtitle.textContent="Αυτόματο προγνωστικό";
     }
+    queueAutomaticPrediction(id);
   });
 }
 
@@ -2994,7 +3053,7 @@ function render(){
   list.innerHTML=data.map(m=>{
     const ready=hasPrediction(m);
     const bestProb=ready ? Math.max(...m.p) : null;
-    const confidenceText=ready ? `${m.confidence}% αξιοπιστία` : "Πάτησε για ανάλυση";
+    const confidenceText=ready ? `${m.confidence}% αξιοπιστία` : "Αυτόματη φόρτωση";
     const strongestText=ready ? `${bestProb}%` : "—";
     return `
     <article class="match compact-match" data-auto-prediction="${m.id}" onclick="openPracticalAnalysis(${m.id})">
@@ -4237,6 +4296,12 @@ async function openPracticalAnalysis(id){
   const match=matches.find(m=>m.id===id);
   const panel=document.getElementById(`panel-${id}`);
   if(!match || !panel) return;
+
+  // Το χειροκίνητο πάτημα πρέπει να μπορεί να ξαναδοκιμάσει μετά από αποτυχία.
+  autoPredictionQueued.delete(String(id));
+  if(getApiCooldownSeconds()===0){
+    localStorage.removeItem("mv90_api_cooldown_until");
+  }
 
   if(hasPrediction(match)){
     if(!panel.classList.contains("open")) toggleDetails(id);
