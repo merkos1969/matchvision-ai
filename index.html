@@ -12,7 +12,7 @@
   <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
   <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
-  <title>MatchVision AI V90.1 High Confidence Safe Bet</title>
+  <title>MatchVision AI V90.4 Top Daily Coupon</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1165,7 +1165,7 @@
     }
 
 
-    /* V90.1 — High Confidence Safe Bet */
+    /* V90.4 — Top Daily Coupon */
     .daily-tabs{
       grid-template-columns:minmax(0,1.18fr) minmax(0,.72fr) minmax(0,1.10fr)!important;
       gap:7px!important;
@@ -1206,6 +1206,10 @@
     .safe-bet-confidence{margin-top:4px;color:var(--ok);font-size:10px;font-weight:900;text-align:center}
     .safe-bet-note{margin-top:12px;color:var(--muted);font-size:11px;line-height:1.45}
 
+
+    #topSafeCoupon{margin-bottom:12px}
+    #topSafeCoupon:empty{display:none}
+
 </style>
 </head>
 <body>
@@ -1215,7 +1219,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V90.1</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V90.4</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1350,9 +1354,11 @@
   
   <section id="dailyPicksView" class="hidden">
     <div class="section-title">
-      <h3>Επιλογές ημέρας</h3>
-      <button class="small-btn" id="refreshDailyPicks">↻ Ανανέωση επιλογών</button>
+      <h3>Σημερινές προτάσεις</h3>
+      <button class="small-btn" id="refreshDailyPicks">↻ Ανανέωση</button>
     </div>
+
+    <div id="topSafeCoupon"></div>
 
     <div class="daily-date-card" id="dailyDateCard">
       <div>
@@ -1546,7 +1552,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V90.1 • High Confidence Safe Bet</div>
+      <div class="drawer-version">V90.4 • Top Daily Coupon</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -4451,7 +4457,7 @@ function setDailyPicksStatus(message,type=""){
 function updateDailyRequestSummary(extra=""){
   const el=document.getElementById("dailyRequestSummary");
   if(!el) return;
-  el.textContent=`Αιτήματα αυτής της φόρτωσης: ${dailyRequestsUsed} • Όριο ανάλυσης: 5 αγώνες${extra?` • ${extra}`:""}`;
+  el.textContent=`Αιτήματα: ${dailyRequestsUsed} • Γρήγορη ανάλυση έως 5 αγώνων${extra?` • ${extra}`:""}`;
 }
 
 function updateDailyDateHeader(){
@@ -4689,43 +4695,46 @@ function safeDoubleChance(match){
   return "12";
 }
 
-function renderReadySafeBet(matches){
-  if(dailyPickFilter!=="safe" || dailyMarket!=="result" || !matches.length) return "";
-  const betMatches=matches
+function renderReadySafeBet(matches=[]){
+  if(dailyPickFilter!=="safe" || dailyMarket!=="result") return "";
+
+  const betMatches=(matches||[])
     .filter(m=>Number(m.confidence||0)>=65)
     .sort((a,b)=>Number(b.confidence||0)-Number(a.confidence||0))
     .slice(0,5);
 
-  if(betMatches.length<3){
-    return `
-      <div class="daily-warning">
-        <b>Δεν σχηματίζεται ακόμη έτοιμο Safe Bet:</b>
-        βρέθηκαν ${betMatches.length} αγώνες με confidence τουλάχιστον 65%.
-        Χρειάζονται τουλάχιστον 3.
-      </div>
-    `;
-  }
+  const statusText=betMatches.length>=3
+    ? `${betMatches.length} αγώνες`
+    : `${betMatches.length}/3 έτοιμοι`;
 
   return `
     <section class="safe-bet-card">
       <div class="safe-bet-head">
-        <strong>Έτοιμο Safe Bet</strong>
-        <span class="safe-bet-badge">${betMatches.length} αγώνες</span>
+        <strong>Έτοιμο κουπόνι Safe</strong>
+        <span class="safe-bet-badge">${statusText}</span>
       </div>
-      ${betMatches.map((m,index)=>`
-        <div class="safe-bet-row">
-          <div class="safe-bet-match">
-            ${index+1}. ${m.home} – ${m.away}
-            <small>${m.league} • ${m.time||"Ώρα μη διαθέσιμη"}</small>
+
+      ${betMatches.length
+        ? betMatches.map((m,index)=>`
+          <div class="safe-bet-row">
+            <div class="safe-bet-match">
+              ${index+1}. ${m.home} – ${m.away}
+              <small>${m.league} • ${m.time||"Ώρα μη διαθέσιμη"}</small>
+            </div>
+            <div>
+              <div class="safe-bet-pick">${safeDoubleChance(m)}</div>
+              <div class="safe-bet-confidence">${Math.round(Number(m.confidence||0))}% confidence</div>
+            </div>
           </div>
-          <div>
-            <div class="safe-bet-pick">${safeDoubleChance(m)}</div>
-            <div class="safe-bet-confidence">${Math.round(Number(m.confidence||0))}% confidence</div>
-          </div>
-        </div>
-      `).join("")}
+        `).join("")
+        : `<div class="daily-warning" style="margin:0">
+             Αναζητούνται αυτόματα αγώνες με confidence τουλάχιστον 65%…
+           </div>`
+      }
+
       <div class="safe-bet-note">
-        Επιλέγονται μόνο αγώνες με confidence τουλάχιστον 65%. Το δελτίο περιλαμβάνει 3–5 διπλές ευκαιρίες και ενημερώνεται αυτόματα.
+        Το κουπόνι φαίνεται από την αρχή και συμπληρώνεται αυτόματα μέχρι 5 αγώνες.
+        Δεν χρειάζεται να πατήσεις κανέναν αγώνα.
       </div>
     </section>
   `;
@@ -4776,15 +4785,19 @@ function dailyReason(match,type){
 
 function renderDailyPicks(){
   const list=document.getElementById("dailyPicksList");
+  const topCoupon=document.getElementById("topSafeCoupon");
   if(!list) return;
 
   const strictMatches=dailyMatches.filter(m=>isEligibleDailyMatch(m,dailyPickFilter));
   const analyzed=getAnalyzedMatches(dailyPickFilter);
   const usingFallback=!strictMatches.length && analyzed.length>0;
   if(!analyzed.length){
+    if(topCoupon){
+      topCoupon.innerHTML=renderReadySafeBet([]);
+    }
     list.innerHTML=dailyPicksLoading
-      ? '<div class="empty">Γίνεται αυτόματη αναζήτηση και αυστηρό φιλτράρισμα προβλέψεων από το API…</div>'
-      : `<div class="empty">${dailyPickFilter==="safe" ? "Δεν βρέθηκαν τουλάχιστον 3 αγώνες με confidence πάνω από 65% για έτοιμο Safe Bet." : `Δεν υπάρχουν διαθέσιμα δεδομένα για την αγορά «${marketLabel(dailyMarket)}» στους αγώνες που αναλύθηκαν.`}</div>`;
+      ? '<div class="empty">Οι αγώνες και οι προβλέψεις φορτώνονται στο παρασκήνιο…</div>'
+      : `<div class="empty">${dailyPickFilter==="safe" ? "Δεν βρέθηκαν ακόμη αγώνες με confidence πάνω από 65%." : `Δεν υπάρχουν διαθέσιμα δεδομένα για την αγορά «${marketLabel(dailyMarket)}» στους αγώνες που αναλύθηκαν.`}</div>`;
     return;
   }
 
@@ -4795,7 +4808,10 @@ function renderDailyPicks(){
     ? '<div class="daily-warning"><b>Καλύτερες διαθέσιμες επιλογές:</b> κανένας αγώνας δεν πέρασε όλα τα αυστηρά όρια. Οι παρακάτω επιλογές είναι οι υψηλότερα βαθμολογημένες από τα διαθέσιμα δεδομένα και χρειάζονται αυξημένη προσοχή.</div>'
     : '<div class="daily-success"><b>Αυστηρές επιλογές:</b> οι παρακάτω αγώνες πέρασαν τα βασικά κριτήρια της κατηγορίας.</div>';
 
-  list.innerHTML=renderReadySafeBet(picks)+fallbackNote+picks.map((m,index)=>{
+  if(topCoupon){
+    topCoupon.innerHTML=renderReadySafeBet(picks);
+  }
+  list.innerHTML=fallbackNote+picks.map((m,index)=>{
     const maxProb=Math.max(...m.p);
     const selectedProbability=marketProbability(m,dailyMarket);
     const displayProbability=dailyMarket==="result" ? maxProb : selectedProbability;
@@ -5030,17 +5046,23 @@ async function loadAutomaticDailyPicks(force=false){
       return;
     }
 
+    // Η λίστα εμφανίζεται αμέσως. Οι προβλέψεις συμπληρώνονται παράλληλα.
+    dailyMatches=fixtures;
+    renderDailyPicks();
+
     const candidates=fixtures.slice(0,5);
-    dailyMatches=candidates;
-    setDailyPicksStatus(`Αυτόματη ανάλυση 0/${candidates.length} αγώνων…`,"loading");
+    setDailyPicksStatus(`Γρήγορη ανάλυση 0/${candidates.length} αγώνων…`,"loading");
     updateDailyRequestSummary(`${fixtures.length} διαθέσιμοι αγώνες`);
 
-    for(let i=0;i<candidates.length;i++){
-      await fetchDailyPrediction(candidates[i],force);
-      setDailyPicksStatus(`Ανάλυση ${i+1}/${candidates.length} αγώνων…`,"loading");
-      renderDailyPicks();
-      if(i<candidates.length-1) await wait(1200);
-    }
+    await runWithConcurrency(
+      candidates,
+      2,
+      async (match)=>{ await fetchDailyPrediction(match,force); },
+      (done,total)=>{
+        setDailyPicksStatus(`Γρήγορη ανάλυση ${done}/${total} αγώνων…`,"loading");
+        renderDailyPicks();
+      }
+    );
 
     const allAnalyzed=dailyMatches.filter(m=>hasPrediction(m)).length;
     const strictSafe=dailyMatches.filter(m=>isEligibleDailyMatch(m,"safe")).length;
