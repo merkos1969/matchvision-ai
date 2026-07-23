@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V88 - Στατιστικές προβλέψεις ποδοσφαίρου" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V88</title>
+  <meta name="description" content="MatchVision AI V88 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
+  <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
+  <title>MatchVision AI V88 Stable</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1123,7 +1123,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V87</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V88</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1454,7 +1454,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V87 • Menu Fix fixed daily picks</div>
+      <div class="drawer-version">V88 Stable</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -4872,7 +4872,7 @@ document.addEventListener("click",event=>{
   }
   if(target==="more"){
     document.getElementById("sideMenu").classList.add("open");
-    document.getElementById("drawerOverlay").classList.add("show");
+    document.getElementById("drawerOverlay").classList.add("open");
   }
 });
 
@@ -4935,10 +4935,38 @@ document.getElementById("saveSettings").addEventListener("click",()=>{
 });
 
 if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost" || location.hostname==="127.0.0.1")){
-  window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(err=>{
+  window.addEventListener("load",async()=>{
+    try{
+      const registration=await navigator.serviceWorker.register("./sw.js?v=88-stable",{
+        scope:"./",
+        updateViaCache:"none"
+      });
+      await registration.update();
+
+      // Ενεργοποιεί άμεσα τη νεότερη έκδοση, εφόσον ο service worker
+      // υποστηρίζει το μήνυμα SKIP_WAITING.
+      if(registration.waiting){
+        registration.waiting.postMessage({type:"SKIP_WAITING"});
+      }
+      registration.addEventListener("updatefound",()=>{
+        const worker=registration.installing;
+        if(!worker) return;
+        worker.addEventListener("statechange",()=>{
+          if(worker.state==="installed" && navigator.serviceWorker.controller){
+            worker.postMessage({type:"SKIP_WAITING"});
+          }
+        });
+      });
+
+      let reloading=false;
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{
+        if(reloading) return;
+        reloading=true;
+        location.reload();
+      });
+    }catch(err){
       console.warn("Service Worker registration failed:",err);
-    });
+    }
   });
 }
 
