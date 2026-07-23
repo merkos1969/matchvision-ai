@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V88 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V89 Smart Picks - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
   <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
-  <title>MatchVision AI V88 Stable</title>
+  <title>MatchVision AI V89 Smart Picks</title>
   <style>
     :root{
       --bg:#06111d;
@@ -336,6 +336,14 @@
     .compact-pick:active{transform:scale(.98)}
     .compact-pick b{display:block;color:var(--accent);font-size:18px}
     .compact-pick span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+    .smart-confidence{
+      display:inline-flex;align-items:center;justify-content:center;gap:5px;
+      margin-top:5px;padding:4px 7px;border-radius:999px;
+      font-size:9px;font-weight:900;letter-spacing:.15px
+    }
+    .smart-confidence.high{background:rgba(74,222,128,.14);color:var(--ok)}
+    .smart-confidence.medium{background:rgba(255,209,102,.14);color:var(--warning)}
+    .smart-confidence.low{background:rgba(255,123,123,.14);color:var(--danger)}
     .compact-probs{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
     .compact-probs div{text-align:center;padding:7px 5px;border-radius:11px;background:rgba(255,255,255,.035);font-size:11px;color:var(--muted)}
     .compact-probs b{display:block;color:var(--text);font-size:13px;margin-bottom:2px}
@@ -1123,7 +1131,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V88</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V89</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1454,7 +1462,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V88 Stable</div>
+      <div class="drawer-version">V89 • Smart Picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -2795,6 +2803,22 @@ let autoPredictionQueue=[];
 let autoPredictionBusy=false;
 const autoPredictionQueued=new Set();
 
+function smartConfidenceInfo(match){
+  const confidence=Number(match?.confidence||0);
+  const completeness=matchCompleteness(match||{});
+  const gap=hasPrediction(match) ? predictionGap(match) : 0;
+  const score=Math.round(confidence*0.55 + completeness*0.25 + Math.min(gap*4,100)*0.20);
+  if(score>=72) return {score,label:"Ισχυρή ένδειξη",className:"high"};
+  if(score>=52) return {score,label:"Μέτρια ένδειξη",className:"medium"};
+  return {score,label:"Χαμηλή ένδειξη",className:"low"};
+}
+
+function smartConfidenceMarkup(match){
+  if(!hasPrediction(match)) return "";
+  const info=smartConfidenceInfo(match);
+  return `<em class="smart-confidence ${info.className}">${info.label} · ${info.score}/100</em>`;
+}
+
 function updateQuickPick(match){
   if(!match) return;
   const quick=document.getElementById(`quick-pick-${match.id}`);
@@ -2808,8 +2832,21 @@ function updateQuickPick(match){
   if(title) title.textContent=match.pick||"—";
   if(subtitle) subtitle.textContent=
     Number.isFinite(best)
-      ? `1 ${match.p[0]}% · Χ ${match.p[1]}% · 2 ${match.p[2]}%`
+      ? `${match.confidence}% αξιοπιστία`
       : "Δες την ανάλυση";
+
+  let smart=quick.querySelector(".smart-confidence");
+  if(hasPrediction(match)){
+    const info=smartConfidenceInfo(match);
+    if(!smart){
+      smart=document.createElement("em");
+      quick.appendChild(smart);
+    }
+    smart.className=`smart-confidence ${info.className}`;
+    smart.textContent=`${info.label} · ${info.score}/100`;
+  } else if(smart){
+    smart.remove();
+  }
 }
 
 function queueAutomaticPrediction(fixtureId){
@@ -2913,6 +2950,7 @@ function render(){
         >
           <b>${ready?(m.pick||"—"):"Φόρτωση…"}</b>
           <span>${ready?confidenceText:"Αυτόματο προγνωστικό"}</span>
+          ${ready?smartConfidenceMarkup(m):""}
         </button>
       </div>
 
@@ -2947,6 +2985,7 @@ function render(){
             <div><b data-full-completeness>${matchCompleteness(m)}%</b><span>Πληρότητα</span></div>
             <div><b data-full-probability>${ready ? strongestText : "—"}</b><span>Πιθανότητα</span></div>
           </div>
+          ${ready?`<div class="daily-quality-row" style="margin-top:10px">${smartConfidenceMarkup(m)}</div>`:""}
           <div class="why-pick" data-why-pick>
             <b>Γιατί προτείνεται</b>
             <ul><li>${m.reason||"Η αιτιολόγηση θα εμφανιστεί μετά την ανάλυση."}</li></ul>
