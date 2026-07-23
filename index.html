@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V88.1 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V88.2 Stable - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest?v=88-stable" />
   <link rel="icon" href="./icon.svg?v=88-stable" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png?v=88-stable" />
-  <title>MatchVision AI V88.1 Stable</title>
+  <title>MatchVision AI V88.2 Stable</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1115,7 +1115,7 @@
 }
 
 
-    /* V88.1 — Σημερινές προτάσεις */
+    /* V88.2 — Σημερινές προτάσεις */
     .home-safe-box{
       margin:12px 0 16px;
       padding:14px;
@@ -1155,7 +1155,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V88.1</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V88.2</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -2356,24 +2356,61 @@ async function loadHomeSafePicks(force=false){
   homeSafeLoading=false;
 }
 
-async function loadDateFromApi(date){
+async function loadDateFromApi(date,attempt=0){
   try{
-    setApiStatus("Φόρτωση πραγματικών αγώνων…","loading");
+    setApiStatus(attempt ? "Νέα προσπάθεια φόρτωσης αγώνων…" : "Φόρτωση πραγματικών αγώνων…","loading");
     const data=await apiFetch(`/fixtures?date=${date}&timezone=Europe%2FAthens`);
     const real=(data.response||[]).map(mapFixture);
+
+    // Μην αντικαθιστάς σωστή cache με κενή απάντηση του API.
+    if(!real.length){
+      const cached=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
+      const cachedDate=localStorage.getItem("mv40_real_matches_date");
+
+      if(cachedDate===date && Array.isArray(cached) && cached.length){
+        matches=cached.map(normalizeCachedMatch);
+        selectedApiDate=date;
+        currentFilter="today";
+        buildDateStrip();
+        syncDayFiltersFromDate(date);
+        populateLeagues();
+        render();
+        document.getElementById("matchCount").textContent=matches.length;
+        setApiStatus("Το API επέστρεψε προσωρινά κενή λίστα. Εμφανίζονται οι αποθηκευμένοι αγώνες.","ok");
+        setTimeout(()=>loadHomeSafePicks(false),250);
+        return;
+      }
+
+      // Μία μόνο γρήγορη επανάληψη — όχι συνεχείς αναμονές.
+      if(attempt===0){
+        setApiStatus("Δεν ήρθαν αγώνες. Γίνεται μία γρήγορη νέα προσπάθεια…","loading");
+        await wait(1800);
+        return loadDateFromApi(date,1);
+      }
+    }
+
     matches=real;
-    localStorage.setItem("mv40_real_matches", JSON.stringify(real));
-    localStorage.setItem("mv40_real_matches_date", date);
-    localStorage.setItem("mv40_real_matches_saved_at", String(Date.now()));
+    if(real.length){
+      localStorage.setItem("mv40_real_matches", JSON.stringify(real));
+      localStorage.setItem("mv40_real_matches_date", date);
+      localStorage.setItem("mv40_real_matches_saved_at", String(Date.now()));
+    }
+
     selectedApiDate=date;
     currentFilter="today";
     buildDateStrip();
-  syncDayFiltersFromDate(selectedApiDate);
-  populateLeagues();
+    syncDayFiltersFromDate(selectedApiDate);
+    populateLeagues();
     render();
     document.getElementById("matchCount").textContent=real.length;
-    setApiStatus(real.length?`${real.length} πραγματικοί αγώνες φορτώθηκαν`:"Δεν βρέθηκαν αγώνες για την επιλεγμένη ημέρα","ok");
-    setTimeout(()=>loadHomeSafePicks(false),250);
+
+    if(real.length){
+      setApiStatus(`${real.length} πραγματικοί αγώνες φορτώθηκαν`,"ok");
+      setTimeout(()=>loadHomeSafePicks(false),250);
+    }else{
+      setApiStatus("Δεν επέστρεψε αγώνες το API για τη σημερινή ημέρα.","error");
+      renderHomeSafePicks([],false);
+    }
   }catch(err){
     const cached=JSON.parse(localStorage.getItem("mv40_real_matches") || "null");
     const cachedDate=localStorage.getItem("mv40_real_matches_date");
@@ -2384,13 +2421,19 @@ async function loadDateFromApi(date){
       syncDayFiltersFromDate(date);
       populateLeagues();
       render();
-      setApiStatus("Εμφανίζονται οι αποθηκευμένοι αγώνες της ημέρας. Η ενημέρωση θα δοκιμαστεί ξανά αργότερα.","ok");
+      document.getElementById("matchCount").textContent=matches.length;
+      setApiStatus("Εμφανίζονται οι αποθηκευμένοι αγώνες της ημέρας.","ok");
       setTimeout(()=>loadHomeSafePicks(false),250);
+    }else if(attempt===0){
+      setApiStatus("Προσωρινό πρόβλημα σύνδεσης. Γίνεται μία νέα προσπάθεια…","loading");
+      await wait(1800);
+      return loadDateFromApi(date,1);
     }else{
       matches=[];
       populateLeagues();
       setApiStatus(err.message,"error");
       render();
+      renderHomeSafePicks([],false);
     }
   }
 }
