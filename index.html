@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V87 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V88 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V87</title>
+  <title>MatchVision AI V88</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1287,7 +1287,7 @@
     <div class="daily-tabs">
       <button class="daily-tab active" data-daily-filter="safe">Χαμηλότερο ρίσκο</button>
       <button class="daily-tab" data-daily-filter="risk">Ρίσκο</button>
-      <button class="daily-tab" data-daily-filter="surprise">Έκπληξη</button>
+      <button class="daily-tab" data-daily-filter="surprise">Εναλλακτική επιλογή</button>
     </div>
 
     <div class="market-title">Αγορά επιλογών ημέρας</div>
@@ -1332,7 +1332,7 @@
         <ul class="guide-mini-list">
           <li>Χαμηλότερο ρίσκο</li>
           <li>Ρίσκο</li>
-          <li>Έκπληξη</li>
+          <li>Εναλλακτική επιλογή</li>
         </ul>
         <p>Μπορείς επίσης να αλλάξεις αγορά: 1–Χ–2, Over 0,5, Over 1,5, Over 2,5 και 1ο ημίχρονο Over 0,5.</p>
       </div>
@@ -2136,7 +2136,11 @@ async function analyzeFixture(fixtureId){
           <span class="risk">${quality.key==="full" ? "Υψηλότερη πληρότητα" : quality.key==="limited" ? "Χρειάζεται προσοχή" : "Η ανάλυση δεν είναι αξιόπιστη"}</span>
         </div>
         <div class="prediction-title">
-          <span>Στατιστική εκτίμηση</span>
+          <span>Κύρια πρόβλεψη 1–Χ–2</span>
+          <strong>${primaryOutcomeLabel({p:[ph,pd,pa],home:homeName,away:awayName})}</strong>
+        </div>
+        <div class="prediction-title" style="margin-top:10px">
+          <span>Ασφαλέστερη επιλογή</span>
           <strong>${pickCode ? `${pickCode} — ` : ""}${pick}</strong>
         </div>
         <div class="prob">
@@ -2145,8 +2149,9 @@ async function analyzeFixture(fixtureId){
           <div><b>${pa}%</b><span>2</span></div>
         </div>
         <div class="analysis-grid">
-          <div class="analysis-box"><b>${overUnder}</b><span>Σύνολο γκολ</span></div>
-          <div class="analysis-box"><b>${goalEstimate}</b><span>Εκτίμηση γκολ</span></div>
+          <div class="analysis-box"><b>${overUnderText || "—"}</b><span>Over / Under</span></div>
+          <div class="analysis-box"><b>${ggText || "—"}</b><span>GG / NG</span></div>
+          <div class="analysis-box"><b>${goalEstimate}</b><span>Πιθανό σκορ</span></div>
         </div>
         <p class="reason" style="margin-top:12px">${advice}</p>
 
@@ -2802,7 +2807,9 @@ function updateQuickPick(match){
 
   if(title) title.textContent=match.pick||"—";
   if(subtitle) subtitle.textContent=
-    Number.isFinite(best) ? `${best}% • ${match.confidence||best}% εμπιστοσύνη` : "Δες την ανάλυση";
+    Number.isFinite(best)
+      ? `1 ${match.p[0]}% · Χ ${match.p[1]}% · 2 ${match.p[2]}%`
+      : "Δες την ανάλυση";
 }
 
 function queueAutomaticPrediction(fixtureId){
@@ -3723,14 +3730,17 @@ function renderDetailOverview(match){
   const goals=events.filter(e=>e.type==="Goal");
   const cards=events.filter(e=>e.type==="Card");
   const subs=events.filter(e=>e.type==="subst");
+  const scoreGoals=Math.max(0,Number(match.hs||0)+Number(match.as||0));
+  const displayedGoals=Math.max(goals.length,scoreGoals);
 
   document.getElementById("detail-overview").innerHTML=`
     <div class="analysis-grid">
-      <div class="analysis-box"><b>${goals.length}</b><span>Γκολ</span></div>
+      <div class="analysis-box"><b>${displayedGoals}</b><span>Γκολ</span></div>
       <div class="analysis-box"><b>${cards.length}</b><span>Κάρτες</span></div>
       <div class="analysis-box"><b>${subs.length}</b><span>Αλλαγές</span></div>
       <div class="analysis-box"><b>${match.minute || "—"}'</b><span>Λεπτό αγώνα</span></div>
     </div>
+    ${displayedGoals>goals.length ? '<div class="api-note" style="margin-top:12px">Το σκορ έχει ενημερωθεί, αλλά το γεγονός του γκολ μπορεί να εμφανιστεί στη χρονογραμμή με μικρή καθυστέρηση.</div>' : ''}
     <div class="card" style="margin-top:12px">
       <h3 style="margin-top:0">Τελευταία γεγονότα</h3>
       ${(match.events||[]).map(e=>`<div class="match-event">${e}</div>`).join("")}
@@ -4373,7 +4383,7 @@ function isEligibleDailyMatch(match,type){
   if(type==="risk"){
     return confidence>=34 && maxProb>=35 && gap>=2 && completeness>=15;
   }
-  // Έκπληξη: ουσιαστική ένδειξη για ισοπαλία ή φιλοξενούμενο.
+  // Εναλλακτική επιλογή: ουσιαστική ένδειξη για ισοπαλία ή φιλοξενούμενο.
   const draw=match.p[1]||0;
   const away=match.p[2]||0;
   return confidence>=30 && completeness>=15 && ((away>=28 && away>=draw) || draw>=29);
@@ -4440,6 +4450,16 @@ function dailyPickScore(match,type){
   return upset*0.55 + completeness*0.20 + confidence*0.15 + gap*0.10;
 }
 
+function primaryOutcomeLabel(match){
+  if(!hasPrediction(match)) return "—";
+  const values=[Number(match.p?.[0]||0),Number(match.p?.[1]||0),Number(match.p?.[2]||0)];
+  const max=Math.max(...values);
+  const index=values.indexOf(max);
+  const code=index===0?"1":index===1?"Χ":"2";
+  const name=index===0?match.home:index===2?match.away:"Ισοπαλία";
+  return `${code} — ${name}`;
+}
+
 function bestOutcomeCode(match){
   if(!hasPrediction(match)) return "";
   const [home,draw,away]=match.p;
@@ -4466,9 +4486,9 @@ function dailyPickLabel(match,type){
 
   const away=match.p?.[2]||0;
   const draw=match.p?.[1]||0;
-  if(away>=draw && away>=30) return `Έκπληξη: ${match.away}`;
-  if(draw>=31) return "Έκπληξη: Ισοπαλία";
-  return match.pick || "Πιθανή έκπληξη";
+  if(away>=draw && away>=30) return `Εναλλακτική επιλογή: ${match.away}`;
+  if(draw>=31) return "Εναλλακτική επιλογή: Ισοπαλία";
+  return match.pick || "Εναλλακτική επιλογή";
 }
 
 function dailyReason(match,type){
@@ -4493,8 +4513,8 @@ function dailyReason(match,type){
   const draw=match.p[1]||0;
   const away=match.p[2]||0;
   return away>=draw
-    ? `Πιθανή έκπληξη επειδή ο φιλοξενούμενος φτάνει ${away}% στα διαθέσιμα δεδομένα.`
-    : `Πιθανή έκπληξη επειδή η ισοπαλία φτάνει ${draw}% στα διαθέσιμα δεδομένα.`;
+    ? `Εναλλακτική επιλογή επειδή ο φιλοξενούμενος φτάνει ${away}% στα διαθέσιμα δεδομένα.`
+    : `Εναλλακτική επιλογή επειδή η ισοπαλία φτάνει ${draw}% στα διαθέσιμα δεδομένα.`;
 }
 
 function renderDailyPicks(){
@@ -4524,7 +4544,7 @@ function renderDailyPicks(){
     const displayProbability=dailyMarket==="result" ? maxProb : selectedProbability;
     const gap=predictionGap(m);
     const completeness=matchCompleteness(m);
-    const baseTypeLabel=dailyPickFilter==="safe"?"Χαμηλότερο ρίσκο":dailyPickFilter==="risk"?"Ρίσκο":"Έκπληξη";
+    const baseTypeLabel=dailyPickFilter==="safe"?"Χαμηλότερο ρίσκο":dailyPickFilter==="risk"?"Ρίσκο":"Εναλλακτική επιλογή";
     const typeLabel=usingFallback && dailyPickFilter!=="surprise"
       ? `Καλύτερη διαθέσιμη · ${baseTypeLabel}`
       : baseTypeLabel;
