@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V94 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V95 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V94</title>
+  <title>MatchVision AI V95</title>
   <style>
     :root{
       --bg:#06111d;
@@ -457,12 +457,11 @@
       min-height:46px!important;border-radius:14px!important;font-size:14px!important
     }
     .controls{
-      display:grid!important;grid-template-columns:1fr 1fr!important;
+      display:grid!important;grid-template-columns:1fr!important;
       gap:8px!important;margin:0 0 10px!important
     }
     .controls .chip{display:none!important}
-    .controls .chip[data-filter="today"],
-    .controls .chip[data-filter="tomorrow"]{display:block!important}
+    .controls .chip[data-filter="today"]{display:block!important}
     .date-strip{display:none!important}
     .section-title{margin:8px 2px 10px!important}
     .section-title h3{font-size:21px!important}
@@ -1115,7 +1114,7 @@
 }
 
 
-    /* V94 — Daily Bundle / άμεσες προβλέψεις */
+    /* V95 — Today only / refreshed interface */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(135deg,rgba(55,214,199,.16),rgba(75,125,255,.10));
@@ -1140,6 +1139,63 @@
     .daily-bundle-confidence{text-align:center;color:var(--ok);font-size:10px;font-weight:900;margin-top:3px}
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
+
+    /* V95 — καθαρότερο mobile interface */
+    :root{
+      --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
+      --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
+      --shadow:0 12px 28px rgba(0,0,0,.24)
+    }
+    body{background:linear-gradient(180deg,#061b2b 0%,#04131f 48%,#020a11 100%)}
+    .app{max-width:760px;padding-left:12px;padding-right:12px}
+    header{border-bottom:1px solid rgba(66,214,200,.12);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .topbar{align-items:center!important;padding:8px 12px!important}
+    #menuBtn{background:linear-gradient(145deg,#12344c,#0a2437)!important;border-color:#28546c!important}
+    .logo{box-shadow:0 0 0 1px rgba(255,209,102,.28),0 10px 24px rgba(0,0,0,.28)!important}
+    .title-wrap h1{letter-spacing:-.45px!important}
+    .title-wrap h1 small{font-size:13px!important;margin-left:3px}
+    .search-wrap{margin-top:4px!important}
+    .search-wrap input,.search-wrap select{
+      min-height:50px!important;background:rgba(9,31,48,.96)!important;
+      border-color:#23506a!important;border-radius:16px!important;padding:12px 14px!important
+    }
+    .controls{margin:4px 0 14px!important}
+    .controls .chip[data-filter="today"]{
+      min-height:48px!important;border-radius:16px!important;font-size:17px!important;
+      background:linear-gradient(135deg,#47d9cb,#38c7bb)!important;
+      box-shadow:0 9px 22px rgba(55,214,199,.20)!important
+    }
+    .section-title{align-items:flex-end!important;margin:12px 3px 12px!important}
+    .section-title h3{font-size:25px!important;letter-spacing:-.35px}
+    .section-title span{max-width:47%;text-align:right;line-height:1.35}
+    .compact-match{
+      background:linear-gradient(155deg,rgba(15,48,70,.98),rgba(7,28,44,.99))!important;
+      border:1px solid rgba(66,214,200,.18)!important;border-radius:20px!important;
+      padding:14px!important;box-shadow:0 10px 26px rgba(0,0,0,.20)!important
+    }
+    .compact-league{font-size:12px!important;color:#49d8ca!important;margin-bottom:9px!important}
+    .compact-team{font-size:16px!important;line-height:1.25;margin:6px 0!important}
+    .compact-team img{width:28px!important;height:28px!important;margin-right:7px!important;vertical-align:middle!important;display:inline-block!important}
+    .compact-sub{font-size:11px!important;margin-top:9px!important}
+    .compact-pick{
+      min-height:86px!important;border-radius:18px!important;
+      border-color:rgba(66,214,200,.25)!important;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important
+    }
+    .compact-pick b{font-size:18px!important;color:#4bdccf!important}
+    .compact-pick span{font-size:11px!important;margin-top:7px!important}
+    .match-time-badge{min-width:64px;padding:7px 10px;border-radius:12px}
+    .daily-bundle-coupon{border-radius:22px;padding:16px;background:linear-gradient(145deg,rgba(55,214,199,.14),rgba(13,42,64,.98))}
+    .daily-bundle-head h3{font-size:21px}
+    .daily-bundle-row{padding:12px;border-radius:15px}
+    .bottom-nav{background:rgba(3,15,25,.98);border-top-color:rgba(66,214,200,.13)}
+    @media(max-width:420px){
+      .compact-match{grid-template-columns:minmax(0,1fr) 112px!important}
+      .section-title h3{font-size:23px!important}
+      .section-title span{font-size:10px!important}
+      .compact-team{font-size:15px!important}
+    }
+
 </style>
 </head>
 <body>
@@ -1149,7 +1205,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V94</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V95</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1195,7 +1251,6 @@
 
     <div class="controls">
       <button class="chip active" data-filter="today">Σήμερα</button>
-      <button class="chip" data-filter="tomorrow">Αύριο</button>
       <button class="chip" data-filter="favorites">Αγαπημένα</button>
       <button class="chip" data-filter="high">Υψηλή αξιοπιστία</button>
     </div>
@@ -1203,7 +1258,7 @@
 
 
     <div class="section-title">
-      <h3 id="sectionTitle">Αγώνες ημέρας</h3>
+      <h3 id="sectionTitle">Σημερινοί αγώνες</h3>
       <span id="lastUpdate">Ώρα Ελλάδας • Ενημέρωση: τώρα</span>
     </div>
     <main class="match-list" id="matchList"></main>
@@ -1352,7 +1407,7 @@
     <div class="guide-grid">
       <div class="guide-card">
         <h4>🚀 Πώς ξεκινάς</h4>
-        <p>Άνοιξε την εφαρμογή και επίλεξε «Σήμερα» ή «Αύριο» για να δεις τους διαθέσιμους αγώνες.</p>
+        <p>Άνοιξε την εφαρμογή για να δεις αυτόματα τους διαθέσιμους σημερινούς αγώνες.</p>
         <p>Οι αγώνες εμφανίζονται σε λίστα και το προγνωστικό φορτώνεται αυτόματα δίπλα σε κάθε παιχνίδι. Πάτησε την κάρτα μόνο για περισσότερες λεπτομέρειες.</p>
       </div>
       <div class="guide-card">
@@ -1494,7 +1549,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V94 • Menu Fix fixed daily picks</div>
+      <div class="drawer-version">V95 • Σημερινοί αγώνες • Νέο interface</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1529,8 +1584,6 @@ let matches = [
   {id:2,day:"today",league:"Αγγλία • Premier League",time:"20:30",home:"Arsenal",away:"Chelsea",hform:"4Ν-1Η",aform:"2Ν-2Ι-1Η",p:[57,25,18],pick:"1",confidence:84,over:63,gg:57,score:"2–1",reason:"Η Arsenal έχει ισχυρότερη πρόσφατη φόρμα, περισσότερα γκολ ανά αγώνα και καλύτερη αμυντική επίδοση.",status:"pending"},
   {id:3,day:"today",league:"Ισπανία • La Liga",time:"22:00",home:"Valencia",away:"Sevilla",hform:"2Ν-2Ι-1Η",aform:"1Ν-2Ι-2Η",p:[41,34,25],pick:"1Χ",confidence:69,over:44,gg:49,score:"1–0",reason:"Ο αγώνας αναμένεται κλειστός. Η έδρα δίνει μικρό προβάδισμα στη Valencia.",status:"pending"},
   {id:4,day:"today",league:"Ιταλία • Serie A",time:"21:45",home:"Milan",away:"Roma",hform:"3Ν-1Ι-1Η",aform:"3Ν-2Η",p:[45,29,26],pick:"Over 1,5",confidence:73,over:61,gg:59,score:"2–1",reason:"Και οι δύο ομάδες δημιουργούν αρκετές ευκαιρίες και έχουν υψηλό ποσοστό αγώνων με τουλάχιστον δύο γκολ.",status:"pending"},
-  {id:5,day:"tomorrow",league:"Γερμανία • Bundesliga",time:"19:30",home:"Dortmund",away:"Leipzig",hform:"4Ν-1Η",aform:"3Ν-1Ι-1Η",p:[43,28,29],pick:"Goal/Goal",confidence:81,over:72,gg:74,score:"2–2",reason:"Οι δύο ομάδες έχουν υψηλό επιθετικό ρυθμό και συχνά σκοράρουν και δέχονται γκολ.",status:"pending"},
-  {id:6,day:"tomorrow",league:"Γαλλία • Ligue 1",time:"22:00",home:"Lyon",away:"Marseille",hform:"2Ν-1Ι-2Η",aform:"3Ν-1Ι-1Η",p:[31,31,38],pick:"Χ2",confidence:71,over:58,gg:62,score:"1–2",reason:"Η Marseille εμφανίζεται πιο σταθερή στα τελευταία παιχνίδια, ιδιαίτερα στις εκτός έδρας μεταβάσεις.",status:"pending"}
 ];
 
 
@@ -2725,17 +2778,10 @@ function formatDateLabel(dateStr){
 
 function syncDayFiltersFromDate(dateStr){
   const today=new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Athens"});
-  const tomorrowDate=new Date();
-  tomorrowDate.setDate(tomorrowDate.getDate()+1);
-  const tomorrow=tomorrowDate.toLocaleDateString("en-CA",{timeZone:"Europe/Athens"});
-
   let chipTarget=null;
   if(dateStr===today){
     currentFilter="today";
     chipTarget="today";
-  }else if(dateStr===tomorrow){
-    currentFilter="tomorrow";
-    chipTarget="tomorrow";
   }else{
     currentFilter="selected";
   }
@@ -2745,15 +2791,12 @@ function syncDayFiltersFromDate(dateStr){
   });
 
   document.getElementById("sectionTitle").textContent=
-    dateStr===today ? "Αγώνες ημέρας" :
-    dateStr===tomorrow ? "Αγώνες αύριο" :
-    `Αγώνες ${formatDateLabel(dateStr)}`;
+    dateStr===today ? "Σημερινοί αγώνες" : `Αγώνες ${formatDateLabel(dateStr)}`;
 }
 
 function syncDateStripFromChip(filter){
   const today=new Date();
   const d=new Date(today);
-  if(filter==="tomorrow") d.setDate(today.getDate()+1);
 
   selectedApiDate=d.toLocaleDateString("en-CA",{timeZone:"Europe/Athens"});
   document.querySelectorAll("#dateStrip [data-date]").forEach(btn=>{
@@ -2770,7 +2813,7 @@ function buildDateStrip(){
     const d=new Date(today);
     d.setDate(today.getDate()+i);
     const value=d.toLocaleDateString("en-CA",{timeZone:"Europe/Athens"});
-    days.push({value,label:i===0?"Σήμερα":i===1?"Αύριο":i===-1?"Χθες":formatDateLabel(value)});
+    days.push({value,label:i===0?"Σήμερα":i===-1?"Χθες":formatDateLabel(value)});
   }
   strip.innerHTML=days.map(x=>`<button class="date-btn ${x.value===selectedApiDate?"active":""}" data-date="${x.value}">${x.label}</button>`).join("");
   strip.querySelectorAll("[data-date]").forEach(btn=>btn.addEventListener("click",()=>{
@@ -3006,7 +3049,7 @@ function render(){
   document.getElementById("sectionTitle").textContent=
     currentFilter==="favorites"?"Αγαπημένοι αγώνες":
     currentFilter==="high"?"Υψηλή αξιοπιστία":
-    currentFilter==="tomorrow"?"Αγώνες αύριο":"Αγώνες ημέρας";
+    "Σημερινοί αγώνες";
   if(!data.length){
     const statusText=document.getElementById("apiStatus")?.textContent||"";
     const loading=statusText.includes("Φόρτωση");
@@ -4291,7 +4334,7 @@ document.querySelectorAll(".chip[data-filter]").forEach(btn=>btn.addEventListene
   btn.classList.add("active");
   currentFilter=btn.dataset.filter;
 
-  if(currentFilter==="today" || currentFilter==="tomorrow"){
+  if(currentFilter==="today"){
     syncDateStripFromChip(currentFilter);
     if(settings.realData){
       loadDateFromApi(selectedApiDate);
