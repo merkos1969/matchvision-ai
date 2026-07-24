@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V91 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V92 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V91</title>
+  <title>MatchVision AI V92</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1115,7 +1115,7 @@
 }
 
 
-    /* V91 — Daily Bundle / άμεσες προβλέψεις */
+    /* V92 — Daily Bundle / άμεσες προβλέψεις */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(135deg,rgba(55,214,199,.16),rgba(75,125,255,.10));
@@ -1149,7 +1149,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V91</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V92</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1183,7 +1183,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Ένα μόνο αίτημα φορτώνει τη λίστα αγώνων, τις προβλέψεις και το δελτίο 3 επιλογών.</div>
+      <div class="daily-bundle-note">Εμφανίζονται έως 50 ασφαλέστεροι αγώνες που δεν έχουν ξεκινήσει, ταξινομημένοι από το υψηλότερο confidence.</div>
     </section>
 
     <div class="search-wrap">
@@ -1494,7 +1494,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V91 • Menu Fix fixed daily picks</div>
+      <div class="drawer-version">V92 • Menu Fix fixed daily picks</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1725,7 +1725,7 @@ function renderDailyBundleCoupon(coupon=[],readyCount=0,totalCount=0){
   const list=document.getElementById("dailyBundleCouponList");
   if(!state || !list) return;
 
-  state.textContent=`${readyCount}/${totalCount} προβλέψεις έτοιμες`;
+  state.textContent=`${readyCount} safe αγώνες διαθέσιμοι`;
 
   if(!Array.isArray(coupon) || !coupon.length){
     list.innerHTML=`
@@ -2382,7 +2382,7 @@ async function loadDateFromApi(date){
     renderDailyBundleCoupon(data.coupon||[],readyCount,totalCount);
 
     setApiStatus(
-      `${real.length} αγώνες • ${readyCount}/${totalCount} προβλέψεις από cache`,
+      `${real.length} ασφαλέστεροι επερχόμενοι αγώνες από cache`,
       readyCount ? "ok" : ""
     );
   }catch(err){
