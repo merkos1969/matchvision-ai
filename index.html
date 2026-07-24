@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V95 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V96 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V95</title>
+  <title>MatchVision AI V96</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1114,7 +1114,7 @@
 }
 
 
-    /* V95 — Today only / refreshed interface */
+    /* V96 — Today only / refreshed interface */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(135deg,rgba(55,214,199,.16),rgba(75,125,255,.10));
@@ -1140,7 +1140,7 @@
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
 
-    /* V95 — καθαρότερο mobile interface */
+    /* V96 — καθαρότερο mobile interface */
     :root{
       --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
       --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
@@ -1205,7 +1205,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V95</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V96</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1549,7 +1549,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V95 • Σημερινοί αγώνες • Νέο interface</div>
+      <div class="drawer-version">V96 • Σημερινοί αγώνες • Νέο interface</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1796,7 +1796,7 @@ function renderDailyBundleCoupon(coupon=[],readyCount=0,totalCount=0){
       <div class="daily-bundle-row">
         <div class="daily-bundle-match">
           ${index+1}. ${item.home?.name||""} – ${item.away?.name||""}
-          <small>${item.league?.name||""}${kickoff?` • ${kickoff}`:""}</small>
+          <small>${[item.league?.country||"", item.league?.name||"", kickoff].filter(Boolean).join(" • ")}</small>
         </div>
         <div>
           <div class="daily-bundle-pick">${prediction.doubleChance||"—"}</div>
