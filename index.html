@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V97 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V98 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V97</title>
+  <title>MatchVision AI V98</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1114,7 +1114,7 @@
 }
 
 
-    /* V97 — Smart market selection / refreshed interface */
+    /* V98 — Smart market selection / refreshed interface */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(135deg,rgba(55,214,199,.16),rgba(75,125,255,.10));
@@ -1140,7 +1140,7 @@
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
 
-    /* V97 — καθαρότερο mobile interface */
+    /* V98 — καθαρότερο mobile interface */
     :root{
       --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
       --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
@@ -1205,7 +1205,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V97</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V98</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1239,7 +1239,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Εμφανίζονται έως 50 επερχόμενοι αγώνες έως τις 23:59. Η V97 επιλέγει αυτόματα την καταλληλότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG όταν υποστηρίζεται από τα δεδομένα).</div>
+      <div class="daily-bundle-note">Εμφανίζονται έως 50 επερχόμενοι αγώνες έως τις 23:59. Η V98 επιλέγει αυτόματα την καταλληλότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG όταν υποστηρίζεται από τα δεδομένα).</div>
     </section>
 
     <div class="search-wrap">
@@ -1549,7 +1549,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V97 • Έξυπνη επιλογή αγοράς • Σημερινοί αγώνες</div>
+      <div class="drawer-version">V98 • Έξυπνη επιλογή αγοράς • Σημερινοί αγώνες</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1743,61 +1743,86 @@ function smartMarketPick(prediction,homeName="",awayName=""){
   const ph=Number(p.home ?? percent.home);
   const pd=Number(p.draw ?? percent.draw);
   const pa=Number(p.away ?? percent.away);
-  const vals=[ph,pd,pa];
-  const probs=vals.every(Number.isFinite) ? vals : null;
+  const probs=[ph,pd,pa].every(Number.isFinite) ? [ph,pd,pa] : null;
   const baseConfidence=clampConfidence(p.confidence||0,0,92);
+  const candidates=[];
 
-  // 1) Ρητή αγορά GG/NG από Worker/API, όταν υπάρχει.
-  const bttsRaw=p.bothTeamsScore ?? p.btts ?? p.gg ?? p.goalGoal;
-  if(typeof bttsRaw==="string" && /^(gg|ng|yes|no|ναι|όχι)$/i.test(bttsRaw.trim())){
-    const yes=/^(gg|yes|ναι)$/i.test(bttsRaw.trim());
-    return {code:yes?"GG":"NG",confidence:baseConfidence||70,kind:"btts"};
+  const add=(code,confidence,kind,score=confidence)=>{
+    const c=clampConfidence(confidence,0,92);
+    if(code && c>0) candidates.push({code,confidence:c,kind,score:Number(score)||c});
+  };
+
+  // 1) Καθαρό σημείο 1/Χ/2 από τις πιθανότητες αποτελέσματος.
+  if(probs){
+    const sorted=[...probs].sort((a,b)=>b-a);
+    const max=sorted[0], second=sorted[1], gap=max-second;
+    const idx=probs.indexOf(max);
+    const code=idx===0?"1":idx===1?"Χ":"2";
+
+    if(max>=48 && gap>=7){
+      add(code, Math.min(90, Math.round(max + Math.min(8,gap/2))), "result", max + gap*0.9);
+    } else if(max>=44 && gap>=10){
+      add(code, Math.min(86, Math.round(max + gap/3)), "result", max + gap*0.8);
+    }
   }
 
-  // 2) Over/Under όταν το API δίνει καθαρή γραμμή και η εκτίμηση γκολ τη στηρίζει.
+  // 2) Over/Under: χρησιμοποιούμε τη γραμμή του API και τις εκτιμήσεις γκολ.
   const ou=formatOverUnderText(p.underOver ?? p.under_over ?? "");
   const gh=parseGoalEstimateMidpoint(p.goals?.home ?? p.goalsHome);
   const ga=parseGoalEstimateMidpoint(p.goals?.away ?? p.goalsAway);
   const total=(Number.isFinite(gh)&&Number.isFinite(ga)) ? gh+ga : null;
   const m=ou ? ou.match(/(Over|Under)\s*(\d+(?:\.\d+)?)/i) : null;
-  if(m && Number.isFinite(total)){
+  if(m){
     const type=m[1].toLowerCase();
     const line=Number(m[2]);
-    const margin=type==="over" ? total-line : line-total;
-    if(margin>=0.55){
-      const conf=clampConfidence(68+margin*10,68,88);
-      return {code:`${type==="over"?"Over":"Under"} ${line}`,confidence:conf,kind:"goals"};
+    if(Number.isFinite(total)){
+      const margin=type==="over" ? total-line : line-total;
+      if(margin>=0.20){
+        const conf=clampConfidence(64+margin*12,64,89);
+        add(`${type==="over"?"Over":"Under"} ${line}`,conf,"goals",conf + Math.min(12,margin*8));
+      }
+    } else if(baseConfidence>=66){
+      add(`${type==="over"?"Over":"Under"} ${line}`,Math.min(84,baseConfidence),"goals",baseConfidence+2);
     }
   }
 
-  if(probs){
-    const sorted=[...probs].sort((a,b)=>b-a);
-    const max=sorted[0], gap=sorted[0]-sorted[1];
-    const idx=probs.indexOf(max);
-
-    // 3) Καθαρό σημείο 1/Χ/2 μόνο όταν υπάρχει ουσιαστικό προβάδισμα.
-    if(max>=55 && gap>=11){
-      const code=idx===0?"1":idx===1?"Χ":"2";
-      return {code,confidence:clampConfidence(max,55,90),kind:"result"};
+  // 3) GG/NG. Αν το API το δίνει ρητά, το χρησιμοποιούμε.
+  const bttsRaw=p.bothTeamsScore ?? p.btts ?? p.gg ?? p.goalGoal;
+  if(typeof bttsRaw==="string" && /^(gg|ng|yes|no|ναι|όχι)$/i.test(bttsRaw.trim())){
+    const yes=/^(gg|yes|ναι)$/i.test(bttsRaw.trim());
+    add(yes?"GG":"NG",baseConfidence||72,"btts",(baseConfidence||72)+4);
+  } else if(Number.isFinite(gh) && Number.isFinite(ga)){
+    // Παράγωγη εκτίμηση από τα αναμενόμενα γκολ των δύο ομάδων.
+    if(gh>=0.85 && ga>=0.85){
+      const conf=clampConfidence(62 + Math.min(22,(Math.min(gh,ga)-0.85)*18),62,84);
+      add("GG",conf,"btts",conf+3);
+    } else if(gh<=0.65 || ga<=0.65){
+      const low=Math.min(gh,ga);
+      const conf=clampConfidence(64 + Math.min(20,(0.65-low)*22),64,84);
+      add("NG",conf,"btts",conf+3);
     }
+  }
 
-    // 4) Διπλή ευκαιρία ως ασφαλέστερη λύση όταν το σημείο δεν είναι αρκετά καθαρό.
+  // 4) Διπλή ευκαιρία παραμένει διαθέσιμη, αλλά δεν υπερισχύει πάντα.
+  if(probs){
     const dc=p.doubleChance || p.double_chance;
     if(dc){
-      let dcProb=baseConfidence;
       const x=String(dc).toUpperCase().replace(/\s+/g,"");
+      let dcProb=baseConfidence;
       if(x==="1X"||x==="1Χ") dcProb=ph+pd;
       else if(x==="X2"||x==="Χ2") dcProb=pd+pa;
       else if(x==="12") dcProb=ph+pa;
-      return {code:String(dc).replace(/X/g,"Χ"),confidence:clampConfidence(dcProb||baseConfidence,55,90),kind:"double"};
+      // Μικρή ποινή στην κατάταξη ώστε να επιλεγούν άλλες αγορές όταν είναι εξίσου ισχυρές.
+      add(String(dc).replace(/X/g,"Χ"),clampConfidence(dcProb||baseConfidence,55,90),"double",(dcProb||baseConfidence)-10);
     }
+  } else if(p.doubleChance || p.double_chance){
+    add(String(p.doubleChance||p.double_chance).replace(/X/g,"Χ"),baseConfidence||65,"double",(baseConfidence||65)-10);
   }
 
-  if(p.doubleChance || p.double_chance){
-    return {code:String(p.doubleChance||p.double_chance).replace(/X/g,"Χ"),confidence:baseConfidence||65,kind:"double"};
-  }
+  if(!candidates.length) return {code:"Χωρίς ασφαλή πρόταση",confidence:0,kind:"none"};
 
-  return {code:"Χωρίς ασφαλή πρόταση",confidence:0,kind:"none"};
+  candidates.sort((a,b)=>b.score-a.score || b.confidence-a.confidence);
+  return candidates[0];
 }
 
 function dailyBundlePickLabel(prediction,homeName="",awayName=""){
