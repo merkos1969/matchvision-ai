@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V98 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V99 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V98</title>
+  <title>MatchVision AI V99</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1140,7 +1140,7 @@
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
 
-    /* V98 — καθαρότερο mobile interface */
+    /* V99 — καθαρότερο mobile interface */
     :root{
       --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
       --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
@@ -1154,7 +1154,7 @@
     .logo{box-shadow:0 0 0 1px rgba(255,209,102,.28),0 10px 24px rgba(0,0,0,.28)!important}
     .title-wrap h1{letter-spacing:-.45px!important}
     .title-wrap h1 small{font-size:13px!important;margin-left:3px}
-    .search-wrap{margin-top:4px!important}
+    .search-wrap{margin-top:14px!important;margin-bottom:14px!important}
     .search-wrap input,.search-wrap select{
       min-height:50px!important;background:rgba(9,31,48,.96)!important;
       border-color:#23506a!important;border-radius:16px!important;padding:12px 14px!important
@@ -1185,9 +1185,31 @@
     .compact-pick b{font-size:18px!important;color:#4bdccf!important}
     .compact-pick span{font-size:11px!important;margin-top:7px!important}
     .match-time-badge{min-width:64px;padding:7px 10px;border-radius:12px}
-    .daily-bundle-coupon{border-radius:22px;padding:16px;background:linear-gradient(145deg,rgba(55,214,199,.14),rgba(13,42,64,.98))}
-    .daily-bundle-head h3{font-size:21px}
-    .daily-bundle-row{padding:12px;border-radius:15px}
+    .daily-bundle-coupon{
+      position:relative;overflow:hidden;border-radius:24px;padding:17px;
+      background:
+        radial-gradient(circle at 92% 0%,rgba(255,209,102,.20),transparent 34%),
+        radial-gradient(circle at 5% 100%,rgba(151,111,255,.18),transparent 38%),
+        linear-gradient(145deg,#2b1b46 0%,#1a2545 52%,#0b2638 100%);
+      border:1px solid rgba(191,153,255,.34);
+      box-shadow:0 16px 34px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.05)
+    }
+    .daily-bundle-coupon::before{
+      content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+      background:linear-gradient(180deg,#d3adff,#ffd166)
+    }
+    .daily-bundle-head h3{font-size:21px;color:#f3eaff}
+    .daily-bundle-state{color:#d8c9eb}
+    .daily-bundle-row{
+      padding:12px;border-radius:16px;
+      background:rgba(4,12,27,.42);border-color:rgba(216,201,235,.13)
+    }
+    .daily-bundle-match small,.daily-bundle-note{color:#c2b4d2}
+    .daily-bundle-pick{
+      background:linear-gradient(145deg,rgba(192,153,255,.22),rgba(255,209,102,.10));
+      border-color:rgba(211,173,255,.34);color:#e5caff
+    }
+    .daily-bundle-confidence{color:#ffd978}
     .bottom-nav{background:rgba(3,15,25,.98);border-top-color:rgba(66,214,200,.13)}
     @media(max-width:420px){
       .compact-match{grid-template-columns:minmax(0,1fr) 112px!important}
@@ -1205,7 +1227,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V98</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V99</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1230,7 +1252,7 @@
   <section id="matchesView">
     <section class="daily-bundle-coupon" id="dailyBundleCoupon">
       <div class="daily-bundle-head">
-        <h3>Σημερινές προτάσεις</h3>
+        <h3>Προτάσεις ημέρας</h3>
         <span class="daily-bundle-state" id="dailyBundleState">Φόρτωση…</span>
       </div>
       <div class="daily-bundle-list" id="dailyBundleCouponList">
@@ -1239,7 +1261,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Εμφανίζονται έως 50 επερχόμενοι αγώνες έως τις 23:59. Η V98 επιλέγει αυτόματα την καταλληλότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG όταν υποστηρίζεται από τα δεδομένα).</div>
+      <div class="daily-bundle-note">Εμφανίζονται έως 50 επερχόμενοι αγώνες έως τις 23:59. Η V99 επιλέγει αυτόματα την καταλληλότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG όταν υποστηρίζεται από τα δεδομένα).</div>
     </section>
 
     <div class="search-wrap">
@@ -1249,11 +1271,6 @@
       </select>
     </div>
 
-    <div class="controls">
-      <button class="chip active" data-filter="today">Σήμερα</button>
-      <button class="chip" data-filter="favorites">Αγαπημένα</button>
-      <button class="chip" data-filter="high">Υψηλή αξιοπιστία</button>
-    </div>
     <div class="date-strip" id="dateStrip"></div>
 
 
