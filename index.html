@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V96 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V97 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V96</title>
+  <title>MatchVision AI V97</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1114,7 +1114,7 @@
 }
 
 
-    /* V96 — Today only / refreshed interface */
+    /* V97 — Smart market selection / refreshed interface */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(135deg,rgba(55,214,199,.16),rgba(75,125,255,.10));
@@ -1140,7 +1140,7 @@
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
 
-    /* V96 — καθαρότερο mobile interface */
+    /* V97 — καθαρότερο mobile interface */
     :root{
       --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
       --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
@@ -1205,7 +1205,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo">⚽</div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V96</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V97</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1239,7 +1239,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Εμφανίζονται έως 50 safe αγώνες από όλο το υπόλοιπο της ημέρας έως τις 23:59, με κάλυψη όλων των ωρών.</div>
+      <div class="daily-bundle-note">Εμφανίζονται έως 50 επερχόμενοι αγώνες έως τις 23:59. Η V97 επιλέγει αυτόματα την καταλληλότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG όταν υποστηρίζεται από τα δεδομένα).</div>
     </section>
 
     <div class="search-wrap">
@@ -1549,7 +1549,7 @@
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
-      <div class="drawer-version">V96 • Σημερινοί αγώνες • Νέο interface</div>
+      <div class="drawer-version">V97 • Έξυπνη επιλογή αγοράς • Σημερινοί αγώνες</div>
     </div>
     <button class="drawer-close" id="menuCloseBtn" aria-label="Κλείσιμο menu">×</button>
   </div>
@@ -1731,8 +1731,77 @@ function setApiStatus(message,type=""){
 
 
 
-function dailyBundlePickLabel(prediction){
-  return prediction?.doubleChance || "—";
+function clampConfidence(value,min=0,max=92){
+  const n=Number(value);
+  if(!Number.isFinite(n)) return min;
+  return Math.max(min,Math.min(max,Math.round(n)));
+}
+
+function smartMarketPick(prediction,homeName="",awayName=""){
+  const p=prediction||{};
+  const percent=p.percent||{};
+  const ph=Number(p.home ?? percent.home);
+  const pd=Number(p.draw ?? percent.draw);
+  const pa=Number(p.away ?? percent.away);
+  const vals=[ph,pd,pa];
+  const probs=vals.every(Number.isFinite) ? vals : null;
+  const baseConfidence=clampConfidence(p.confidence||0,0,92);
+
+  // 1) Ρητή αγορά GG/NG από Worker/API, όταν υπάρχει.
+  const bttsRaw=p.bothTeamsScore ?? p.btts ?? p.gg ?? p.goalGoal;
+  if(typeof bttsRaw==="string" && /^(gg|ng|yes|no|ναι|όχι)$/i.test(bttsRaw.trim())){
+    const yes=/^(gg|yes|ναι)$/i.test(bttsRaw.trim());
+    return {code:yes?"GG":"NG",confidence:baseConfidence||70,kind:"btts"};
+  }
+
+  // 2) Over/Under όταν το API δίνει καθαρή γραμμή και η εκτίμηση γκολ τη στηρίζει.
+  const ou=formatOverUnderText(p.underOver ?? p.under_over ?? "");
+  const gh=parseGoalEstimateMidpoint(p.goals?.home ?? p.goalsHome);
+  const ga=parseGoalEstimateMidpoint(p.goals?.away ?? p.goalsAway);
+  const total=(Number.isFinite(gh)&&Number.isFinite(ga)) ? gh+ga : null;
+  const m=ou ? ou.match(/(Over|Under)\s*(\d+(?:\.\d+)?)/i) : null;
+  if(m && Number.isFinite(total)){
+    const type=m[1].toLowerCase();
+    const line=Number(m[2]);
+    const margin=type==="over" ? total-line : line-total;
+    if(margin>=0.55){
+      const conf=clampConfidence(68+margin*10,68,88);
+      return {code:`${type==="over"?"Over":"Under"} ${line}`,confidence:conf,kind:"goals"};
+    }
+  }
+
+  if(probs){
+    const sorted=[...probs].sort((a,b)=>b-a);
+    const max=sorted[0], gap=sorted[0]-sorted[1];
+    const idx=probs.indexOf(max);
+
+    // 3) Καθαρό σημείο 1/Χ/2 μόνο όταν υπάρχει ουσιαστικό προβάδισμα.
+    if(max>=55 && gap>=11){
+      const code=idx===0?"1":idx===1?"Χ":"2";
+      return {code,confidence:clampConfidence(max,55,90),kind:"result"};
+    }
+
+    // 4) Διπλή ευκαιρία ως ασφαλέστερη λύση όταν το σημείο δεν είναι αρκετά καθαρό.
+    const dc=p.doubleChance || p.double_chance;
+    if(dc){
+      let dcProb=baseConfidence;
+      const x=String(dc).toUpperCase().replace(/\s+/g,"");
+      if(x==="1X"||x==="1Χ") dcProb=ph+pd;
+      else if(x==="X2"||x==="Χ2") dcProb=pd+pa;
+      else if(x==="12") dcProb=ph+pa;
+      return {code:String(dc).replace(/X/g,"Χ"),confidence:clampConfidence(dcProb||baseConfidence,55,90),kind:"double"};
+    }
+  }
+
+  if(p.doubleChance || p.double_chance){
+    return {code:String(p.doubleChance||p.double_chance).replace(/X/g,"Χ"),confidence:baseConfidence||65,kind:"double"};
+  }
+
+  return {code:"Χωρίς ασφαλή πρόταση",confidence:0,kind:"none"};
+}
+
+function dailyBundlePickLabel(prediction,homeName="",awayName=""){
+  return smartMarketPick(prediction,homeName,awayName).code;
 }
 
 function mapDailyBundleFixture(item,date){
@@ -1753,9 +1822,9 @@ function mapDailyBundleFixture(item,date){
     hform:"—",
     aform:"—",
     p:ready?[Math.round(ph),Math.round(pd),Math.round(pa)]:[null,null,null],
-    pick:ready ? dailyBundlePickLabel(prediction) : "Μη διαθέσιμο",
-    pickCode:ready ? dailyBundlePickLabel(prediction) : "",
-    confidence:ready ? Math.round(Number(prediction.confidence||Math.max(ph,pd,pa))) : 0,
+    pick:ready ? dailyBundlePickLabel(prediction,item.home?.name||"",item.away?.name||"") : "Μη διαθέσιμο",
+    pickCode:ready ? dailyBundlePickLabel(prediction,item.home?.name||"",item.away?.name||"") : "",
+    confidence:ready ? smartMarketPick(prediction,item.home?.name||"",item.away?.name||"").confidence : 0,
     over:null,
     overText:prediction?.underOver || "—",
     gg:null,
@@ -1791,6 +1860,7 @@ function renderDailyBundleCoupon(coupon=[],readyCount=0,totalCount=0){
 
   list.innerHTML=coupon.slice(0,3).map((item,index)=>{
     const prediction=item.prediction||{};
+    const smart=smartMarketPick(prediction,item.home?.name||"",item.away?.name||"");
     const kickoff=item.kickoff ? formatAthensTime(item.kickoff) : "";
     return `
       <div class="daily-bundle-row">
@@ -1799,8 +1869,8 @@ function renderDailyBundleCoupon(coupon=[],readyCount=0,totalCount=0){
           <small>${[item.league?.country||"", item.league?.name||"", kickoff].filter(Boolean).join(" • ")}</small>
         </div>
         <div>
-          <div class="daily-bundle-pick">${prediction.doubleChance||"—"}</div>
-          <div class="daily-bundle-confidence">${Math.round(Number(prediction.confidence||0))}%</div>
+          <div class="daily-bundle-pick">${smart.code||"—"}</div>
+          <div class="daily-bundle-confidence">${smart.confidence?`${smart.confidence}%`:"—"}</div>
         </div>
       </div>`;
   }).join("");
@@ -4827,19 +4897,26 @@ function buildDailyModel(item,match){
   const completeness=Math.round(completenessInputs.filter(Number.isFinite).length/completenessInputs.length*100);
   const gap=[ph,pd,pa].sort((a,b)=>b-a)[0]-[ph,pd,pa].sort((a,b)=>b-a)[1];
 
-  // Ο βαθμός εμπιστοσύνης δεν είναι πλέον απλό αντίγραφο της μεγαλύτερης πιθανότητας.
-  const confidence=Math.round(
-    Math.min(100,
+  // V97: επιλέγεται η ισχυρότερη τεκμηριωμένη αγορά, όχι υποχρεωτικά διπλή ευκαιρία.
+  const modelConfidence=Math.round(
+    Math.min(92,
       maxp*0.45 +
       completeness*0.35 +
       Math.max(0,gap)*0.20
     )
   );
+  const smart=smartMarketPick({
+    home:ph,draw:pd,away:pa,
+    confidence:modelConfidence,
+    under_over:overUnder,
+    goals:{home:goalsHome,away:goalsAway},
+    doubleChance: resolvedPick.code==="1Χ"||resolvedPick.code==="Χ2"||resolvedPick.code==="12" ? resolvedPick.code : ""
+  },homeName,awayName);
 
   return {
     p:[ph,pd,pa],
-    pick:resolvedPick.code ? `${resolvedPick.code} — ${resolvedPick.label}` : resolvedPick.label,
-    confidence,
+    pick:smart.code,
+    confidence:smart.confidence,
     dataCompleteness:completeness,
     qualityKey:quality.key,
     expectedGoals,
