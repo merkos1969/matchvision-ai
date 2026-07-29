@@ -8,11 +8,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V100 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V102 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V100</title>
+  <title>MatchVision AI V102</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1114,7 +1114,7 @@
 }
 
 
-    /* V100 Stable — calibrated markets / upcoming only */
+    /* V102 Neon — calibrated markets / upcoming only */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(145deg,rgba(35,22,58,.97),rgba(11,30,48,.98));
@@ -1150,7 +1150,7 @@
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
 
-    /* V100 Stable — cleaner mobile interface */
+    /* V102 Neon — cleaner mobile interface */
     :root{
       --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
       --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
@@ -1206,6 +1206,221 @@
       .compact-team{font-size:15px!important}
     }
 
+
+    /* V102 NEON — φωσφορούχο πράσινο / μπλε / μωβ */
+    :root{
+      --bg:#020712;
+      --panel:#071426;
+      --panel2:#0a1d34;
+      --line:#164d68;
+      --text:#f8fbff;
+      --muted:#8faabd;
+      --accent:#53f6d5;
+      --accent2:#62ff89;
+      --neon-green:#6dff8b;
+      --neon-cyan:#45eaff;
+      --neon-blue:#66a8ff;
+      --neon-purple:#bd7cff;
+      --neon-yellow:#ffe46b;
+      --shadow:0 14px 34px rgba(0,0,0,.34);
+    }
+    body{
+      background:
+        radial-gradient(circle at 12% 10%,rgba(69,234,255,.10),transparent 28%),
+        radial-gradient(circle at 88% 28%,rgba(189,124,255,.09),transparent 27%),
+        radial-gradient(circle at 50% 82%,rgba(109,255,139,.055),transparent 34%),
+        linear-gradient(180deg,#03101d 0%,#020914 48%,#01050c 100%)!important;
+    }
+    header{
+      background:linear-gradient(180deg,rgba(2,10,20,.985),rgba(3,15,27,.965))!important;
+      border-bottom:1px solid rgba(69,234,255,.20)!important;
+      box-shadow:0 8px 28px rgba(0,0,0,.34),0 1px 0 rgba(69,234,255,.05)!important;
+    }
+    #menuBtn{
+      background:linear-gradient(145deg,#0d3048,#071a2b)!important;
+      border-color:rgba(69,234,255,.42)!important;
+      box-shadow:0 0 0 1px rgba(69,234,255,.06),0 0 20px rgba(69,234,255,.10),0 10px 24px rgba(0,0,0,.30)!important;
+    }
+    #menuBtn:active{box-shadow:0 0 24px rgba(69,234,255,.22)!important}
+    .title-wrap h1{
+      color:#f8fbff!important;
+      text-shadow:0 0 18px rgba(69,234,255,.08);
+    }
+    .title-wrap h1 small{
+      color:var(--neon-green)!important;
+      text-shadow:0 0 11px rgba(109,255,139,.45);
+    }
+    .logo{
+      box-shadow:0 0 0 1px rgba(255,228,107,.36),0 0 20px rgba(255,228,107,.12),0 12px 28px rgba(0,0,0,.36)!important;
+    }
+
+    .search-wrap input,.search-wrap select,
+    .setting-row input,.setting-row select{
+      background:linear-gradient(180deg,rgba(7,25,43,.98),rgba(5,18,32,.98))!important;
+      border-color:rgba(69,234,255,.24)!important;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 8px 18px rgba(0,0,0,.14)!important;
+    }
+    .search-wrap input:focus,.search-wrap select:focus,
+    .setting-row input:focus,.setting-row select:focus{
+      border-color:var(--neon-cyan)!important;
+      box-shadow:0 0 0 3px rgba(69,234,255,.10),0 0 18px rgba(69,234,255,.08)!important;
+    }
+
+    .section-title h3{
+      color:#fff!important;
+      text-shadow:0 0 14px rgba(69,234,255,.10);
+    }
+    .section-title span{color:#88a8bd!important}
+
+    .compact-match{
+      background:
+        radial-gradient(circle at 96% 5%,rgba(69,234,255,.08),transparent 28%),
+        linear-gradient(155deg,rgba(8,31,51,.99),rgba(4,17,31,.995))!important;
+      border:1px solid rgba(69,234,255,.18)!important;
+      box-shadow:0 12px 30px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.025)!important;
+    }
+    .compact-match:hover{
+      border-color:rgba(69,234,255,.32)!important;
+      box-shadow:0 13px 32px rgba(0,0,0,.30),0 0 18px rgba(69,234,255,.055)!important;
+    }
+    .compact-league{
+      color:var(--neon-cyan)!important;
+      text-shadow:0 0 9px rgba(69,234,255,.18);
+    }
+    .compact-team{color:#f7fbff!important}
+    .compact-side .fav.on{
+      color:var(--neon-yellow)!important;
+      text-shadow:0 0 10px rgba(255,228,107,.45);
+    }
+
+    .compact-pick{
+      background:linear-gradient(145deg,rgba(69,234,255,.13),rgba(83,246,213,.055))!important;
+      border-color:rgba(69,234,255,.26)!important;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 0 14px rgba(69,234,255,.055)!important;
+    }
+    .compact-pick b{color:var(--neon-green)!important;text-shadow:0 0 11px rgba(109,255,139,.24)}
+    .compact-pick span{color:#a9bfd0!important}
+
+    .market-result{
+      background:linear-gradient(135deg,rgba(65,159,255,.23),rgba(44,100,255,.075))!important;
+      border-color:rgba(102,168,255,.40)!important;
+      box-shadow:0 0 16px rgba(102,168,255,.08)!important;
+    }
+    .market-result b,.daily-bundle-pick.market-result{
+      color:#7bc0ff!important;text-shadow:0 0 10px rgba(102,168,255,.28)
+    }
+    .market-double{
+      background:linear-gradient(135deg,rgba(109,255,139,.20),rgba(40,204,151,.065))!important;
+      border-color:rgba(109,255,139,.37)!important;
+      box-shadow:0 0 16px rgba(109,255,139,.07)!important;
+    }
+    .market-double b,.daily-bundle-pick.market-double{
+      color:var(--neon-green)!important;text-shadow:0 0 10px rgba(109,255,139,.28)
+    }
+    .market-goals{
+      background:linear-gradient(135deg,rgba(255,228,107,.18),rgba(255,159,67,.055))!important;
+      border-color:rgba(255,228,107,.35)!important;
+      box-shadow:0 0 16px rgba(255,228,107,.06)!important;
+    }
+    .market-goals b,.daily-bundle-pick.market-goals{
+      color:var(--neon-yellow)!important;text-shadow:0 0 10px rgba(255,228,107,.24)
+    }
+    .market-btts{
+      background:linear-gradient(135deg,rgba(189,124,255,.22),rgba(120,72,255,.06))!important;
+      border-color:rgba(189,124,255,.38)!important;
+      box-shadow:0 0 16px rgba(189,124,255,.07)!important;
+    }
+    .market-btts b,.daily-bundle-pick.market-btts{
+      color:#d5a9ff!important;text-shadow:0 0 10px rgba(189,124,255,.28)
+    }
+
+    .daily-bundle-coupon{
+      background:
+        radial-gradient(circle at 90% 0%,rgba(189,124,255,.18),transparent 34%),
+        radial-gradient(circle at 0% 100%,rgba(69,234,255,.09),transparent 34%),
+        linear-gradient(145deg,rgba(23,14,49,.99),rgba(4,25,43,.99))!important;
+      border-color:rgba(189,124,255,.31)!important;
+      box-shadow:0 16px 36px rgba(0,0,0,.29),0 0 22px rgba(189,124,255,.045)!important;
+    }
+    .daily-bundle-row{
+      background:linear-gradient(145deg,rgba(7,23,42,.78),rgba(7,16,32,.84))!important;
+      border-color:rgba(69,234,255,.10)!important;
+    }
+    .daily-bundle-state{color:#a9bfd0!important}
+    .daily-bundle-confidence{color:var(--neon-green)!important;text-shadow:0 0 8px rgba(109,255,139,.18)}
+
+    .match-time-badge{
+      background:rgba(255,228,107,.095)!important;
+      border-color:rgba(255,228,107,.28)!important;
+      color:var(--neon-yellow)!important;
+      box-shadow:0 0 12px rgba(255,228,107,.045)!important;
+    }
+    .match-time-badge.evening{
+      background:rgba(69,234,255,.09)!important;
+      border-color:rgba(69,234,255,.27)!important;
+      color:#86f2ff!important;
+    }
+    .match-time-badge.late{
+      background:rgba(189,124,255,.11)!important;
+      border-color:rgba(189,124,255,.29)!important;
+      color:#d8b5ff!important;
+    }
+
+    nav{
+      background:linear-gradient(180deg,rgba(3,11,22,.995),rgba(3,15,27,.99))!important;
+      border-right-color:rgba(69,234,255,.15)!important;
+    }
+    nav button.active{
+      color:var(--neon-cyan)!important;
+      background:linear-gradient(90deg,rgba(69,234,255,.12),rgba(109,255,139,.05))!important;
+      border-color:rgba(69,234,255,.21)!important;
+      box-shadow:inset 0 0 16px rgba(69,234,255,.035)!important;
+    }
+    nav button.active::before{
+      background:var(--neon-green)!important;
+      box-shadow:0 0 12px rgba(109,255,139,.55);
+    }
+    #sideMenu [data-nav="settings"]{
+      background:linear-gradient(145deg,#0b2c42,#081d30)!important;
+      border-color:rgba(69,234,255,.30)!important;
+    }
+
+    .bottom-nav{
+      background:rgba(2,9,18,.985)!important;
+      border-top-color:rgba(69,234,255,.16)!important;
+      box-shadow:0 -12px 30px rgba(0,0,0,.42),0 -1px 0 rgba(69,234,255,.035)!important;
+    }
+    .bottom-nav button.active{
+      color:var(--neon-green)!important;
+      background:linear-gradient(180deg,rgba(109,255,139,.105),rgba(69,234,255,.045))!important;
+      text-shadow:0 0 8px rgba(109,255,139,.22);
+    }
+
+    .analysis-section,.recommendation-hero,.prediction-card,.result-analysis{
+      border-color:rgba(69,234,255,.14)!important;
+    }
+    .recommendation-hero strong,.prediction-title strong{
+      color:var(--neon-green)!important;
+      text-shadow:0 0 10px rgba(109,255,139,.16);
+    }
+    .progress-dual i,.meter i,.daily-progress i{
+      background:linear-gradient(90deg,var(--neon-cyan),var(--neon-green),var(--neon-purple))!important;
+    }
+    .live-minute,.live-status{color:#ff6f91!important}
+    .live-minute::before,.live-pulse{background:#ff5377!important;box-shadow:0 0 12px rgba(255,83,119,.55)!important}
+
+    @media(max-width:420px){
+      .compact-match{box-shadow:0 9px 22px rgba(0,0,0,.26)!important}
+      .compact-pick{box-shadow:inset 0 1px 0 rgba(255,255,255,.03)!important}
+    }
+
+
+    /* V102 — νέο MatchVisionAI neon icon */
+    .logo{overflow:hidden!important;padding:0!important;background:#030914!important;border:1px solid rgba(69,234,255,.45)!important;border-radius:15px!important;box-shadow:0 0 18px rgba(69,234,255,.22),0 0 26px rgba(220,65,255,.12),0 10px 24px rgba(0,0,0,.36)!important}
+    .logo img{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}
+    .drawer-logo{overflow:hidden!important;padding:0!important;background:#030914!important;border:1px solid rgba(189,124,255,.35)!important}
+    .drawer-logo img{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}
+
 </style>
 </head>
 <body>
@@ -1213,9 +1428,9 @@
   <header id="appHeader" class="compact">
     <div class="topbar">
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
-      <div class="logo">⚽</div>
+      <div class="logo"><img src="matchvision-icon-v102.png" alt="MatchVisionAI"></div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V100</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V102</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1248,7 +1463,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Εμφανίζονται μόνο αγώνες που δεν έχουν ξεκινήσει. Η V100 επιλέγει αυτόματα την ισχυρότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG) και χρησιμοποιεί πιο συντηρητική βαθμονόμηση αξιοπιστίας.</div>
+      <div class="daily-bundle-note">Εμφανίζονται μόνο αγώνες που δεν έχουν ξεκινήσει. Η V102 επιλέγει αυτόματα την ισχυρότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG) και χρησιμοποιεί πιο συντηρητική βαθμονόμηση αξιοπιστίας.</div>
     </section>
 
     <div class="search-wrap">
@@ -1549,7 +1764,7 @@
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <nav id="sideMenu">
   <div class="drawer-head">
-    <div class="drawer-logo">⚽</div>
+    <div class="drawer-logo"><img src="matchvision-icon-v102.png" alt="MatchVisionAI"></div>
     <div class="drawer-title">
       <b>MatchVision AI</b>
       <span>Γρήγορη πλοήγηση εφαρμογής</span>
@@ -1744,7 +1959,7 @@ function clampConfidence(value,min=0,max=92){
 function calibrateMarketConfidence(value,kind="result"){
   const raw=clampConfidence(value,0,92);
   if(raw<=0) return 0;
-  // V100: συμπίεση των ακραίων τιμών ώστε το 90%+ να μην εμφανίζεται χωρίς πολύ ισχυρά δεδομένα.
+  // V102: συμπίεση των ακραίων τιμών ώστε το 90%+ να μην εμφανίζεται χωρίς πολύ ισχυρά δεδομένα.
   const compressed=raw<=55 ? raw : 55+(raw-55)*0.68;
   const caps={result:86,double:84,goals:83,btts:83,none:0};
   return clampConfidence(compressed,0,caps[kind] ?? 84);
@@ -4990,7 +5205,7 @@ function buildDailyModel(item,match){
   const completeness=Math.round(completenessInputs.filter(Number.isFinite).length/completenessInputs.length*100);
   const gap=[ph,pd,pa].sort((a,b)=>b-a)[0]-[ph,pd,pa].sort((a,b)=>b-a)[1];
 
-  // V100: επιλέγεται η ισχυρότερη τεκμηριωμένη αγορά με βαθμονομημένη αξιοπιστία.
+  // V102: επιλέγεται η ισχυρότερη τεκμηριωμένη αγορά με βαθμονομημένη αξιοπιστία.
   const modelConfidence=Math.round(
     Math.min(92,
       maxp*0.45 +
@@ -5079,7 +5294,7 @@ function isUpcomingDailyFixture(item){
   const kickoff=new Date(item.fixture?.date).getTime();
   if(!Number.isFinite(kickoff)) return false;
 
-  // V100: μόλις φτάσει η ώρα έναρξης, ο αγώνας παύει να θεωρείται επερχόμενος.
+  // V102: μόλις φτάσει η ώρα έναρξης, ο αγώνας παύει να θεωρείται επερχόμενος.
   return kickoff > Date.now();
 }
 
