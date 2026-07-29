@@ -8,12 +8,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V104 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V106 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V104</title>
+  <title>MatchVision AI V106</title>
   <style>
     :root{
       --bg:#06111d;
@@ -226,6 +226,12 @@
       border:1px solid rgba(55,214,199,.14)
     }
     .daily-pick-choice b{color:var(--accent)}
+    .daily-pick-choice .daily-pick-type{
+      margin-bottom:10px;
+      width:max-content;
+      max-width:100%;
+    }
+    .daily-pick-choice .choice-line{display:block}
     .daily-pick-meta{
       display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px
     }
@@ -1121,7 +1127,7 @@
 }
 
 
-    /* V104 Neon — calibrated markets / upcoming only */
+    /* V106 Neon — alternative label inside card */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(145deg,rgba(35,22,58,.97),rgba(11,30,48,.98));
@@ -1428,6 +1434,21 @@
     .drawer-logo{overflow:hidden!important;padding:0!important;background:#030914!important;border:1px solid rgba(189,124,255,.35)!important}
     .drawer-logo img{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}
 
+
+    /* V106 — διπλή γραμμή για το κουμπί Εναλλακτική Επιλογή */
+    .daily-tab-alt{
+      display:flex!important;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:1px;
+      line-height:1.05!important;
+      white-space:normal!important;
+      min-height:54px;
+      padding:7px 6px!important;
+      text-align:center;
+    }
+    .daily-tab-alt span{display:block;width:100%}
 </style>
 </head>
 <body>
@@ -1437,7 +1458,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo"><img src="icon-192.png" alt="MatchVisionAI"></div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V104</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V106</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1470,7 +1491,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Εμφανίζονται μόνο αγώνες που δεν έχουν ξεκινήσει. Η V104 επιλέγει αυτόματα την ισχυρότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG) και χρησιμοποιεί πιο συντηρητική βαθμονόμηση αξιοπιστίας.</div>
+      <div class="daily-bundle-note">Εμφανίζονται μόνο αγώνες που δεν έχουν ξεκινήσει. Η V105 επιλέγει αυτόματα την ισχυρότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG) και χρησιμοποιεί πιο συντηρητική βαθμονόμηση αξιοπιστίας.</div>
     </section>
 
     <div class="search-wrap">
@@ -1608,7 +1629,7 @@
     <div class="daily-tabs">
       <button class="daily-tab active" data-daily-filter="safe">Χαμηλότερο ρίσκο</button>
       <button class="daily-tab" data-daily-filter="risk">Ρίσκο</button>
-      <button class="daily-tab" data-daily-filter="surprise">Εναλλακτική επιλογή</button>
+      <button class="daily-tab daily-tab-alt" data-daily-filter="surprise"><span>Εναλλακτική</span><span>Επιλογή</span></button>
     </div>
 
     <div class="market-title">Αγορά επιλογών ημέρας</div>
@@ -5110,7 +5131,7 @@ function renderDailyPicks(){
     return `
       <article class="daily-pick-card">
         <div class="daily-pick-head">
-          <span class="daily-pick-type ${typeClass}">${typeLabel}</span>
+          ${dailyPickFilter==="surprise" ? "" : `<span class="daily-pick-type ${typeClass}">${typeLabel}</span>`}
           <span class="risk">#${index+1}</span>
         </div>
         ${(()=>{
@@ -5119,7 +5140,10 @@ function renderDailyPicks(){
         })()}
         <div class="daily-pick-match">${m.home} – ${m.away}</div>
         <div class="daily-pick-league">${m.league}</div>
-        <div class="daily-pick-choice">Προτεινόμενη κατεύθυνση: <b>${dailyPickLabel(m,dailyPickFilter)}</b></div>
+        <div class="daily-pick-choice">
+          ${dailyPickFilter==="surprise" ? `<span class="daily-pick-type ${typeClass}">${typeLabel}</span>` : ""}
+          <span class="choice-line">Προτεινόμενη κατεύθυνση: <b>${dailyPickLabel(m,dailyPickFilter)}</b></span>
+        </div>
         ${Number.isFinite(displayProbability)
           ? `<div class="daily-pick-meta">
               <div><b>${displayProbability}%</b><span>${dailyMarket==="result"?"Πιθανότητα":"Πιθανότητα αγοράς"}</span></div>
