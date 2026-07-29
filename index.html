@@ -8,12 +8,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MatchVision AI" />
-  <meta name="description" content="MatchVision AI V103 - Στατιστικές προβλέψεις ποδοσφαίρου" />
+  <meta name="description" content="MatchVision AI V104 - Στατιστικές προβλέψεις ποδοσφαίρου" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>MatchVision AI V103</title>
+  <title>MatchVision AI V104</title>
   <style>
     :root{
       --bg:#06111d;
@@ -1084,6 +1084,12 @@
       font-weight:800;
       letter-spacing:.2px
     }
+    .app-footer-icon{
+      width:64px;height:64px;object-fit:cover;display:block;margin:12px auto 2px;
+      border-radius:18px;
+      box-shadow:0 0 16px rgba(0,229,255,.32),0 0 28px rgba(214,0,255,.24);
+      border:1px solid rgba(88,238,255,.30)
+    }
 
     .hidden{display:none!important}
     @media(max-width:390px){
@@ -1115,7 +1121,7 @@
 }
 
 
-    /* V103 Neon — calibrated markets / upcoming only */
+    /* V104 Neon — calibrated markets / upcoming only */
     .daily-bundle-coupon{
       margin:12px 0 14px;padding:15px;border-radius:20px;
       background:linear-gradient(145deg,rgba(35,22,58,.97),rgba(11,30,48,.98));
@@ -1151,7 +1157,7 @@
     .daily-bundle-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.4}
 
 
-    /* V103 Neon — cleaner mobile interface */
+    /* V104 Neon — cleaner mobile interface */
     :root{
       --bg:#04131f;--panel:#0a2234;--panel2:#0d2a40;--line:#1d4b64;
       --text:#f7fbff;--muted:#9eb4c5;--accent:#42d6c8;--accent2:#7ce8d8;
@@ -1208,7 +1214,7 @@
     }
 
 
-    /* V103 NEON — φωσφορούχο πράσινο / μπλε / μωβ */
+    /* V104 NEON — φωσφορούχο πράσινο / μπλε / μωβ */
     :root{
       --bg:#020712;
       --panel:#071426;
@@ -1416,7 +1422,7 @@
     }
 
 
-    /* V103 — νέο MatchVisionAI neon icon */
+    /* V104 — νέο MatchVisionAI neon icon */
     .logo{overflow:hidden!important;padding:0!important;background:#030914!important;border:1px solid rgba(69,234,255,.45)!important;border-radius:15px!important;box-shadow:0 0 18px rgba(69,234,255,.22),0 0 26px rgba(220,65,255,.12),0 10px 24px rgba(0,0,0,.36)!important}
     .logo img{width:100%;height:100%;display:block;object-fit:cover;border-radius:inherit}
     .drawer-logo{overflow:hidden!important;padding:0!important;background:#030914!important;border:1px solid rgba(189,124,255,.35)!important}
@@ -1431,7 +1437,7 @@
       <button class="menu-btn" id="menuBtn" aria-label="Άνοιγμα μενού" title="Μενού">☰</button>
       <div class="logo"><img src="icon-192.png" alt="MatchVisionAI"></div>
       <div class="title-wrap">
-        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V103</small></h1>
+        <h1>MatchVision<br>AI <small style="font-size:12px;color:var(--accent)">V104</small></h1>
         <div class="subtitle">Στατιστικές προβλέψεις ποδοσφαίρου</div>
         <div class="title-badges">
           <span class="title-badge">Live • Stats • Predictions</span>
@@ -1464,7 +1470,7 @@
           <div><div class="daily-bundle-pick">—</div></div>
         </div>
       </div>
-      <div class="daily-bundle-note">Εμφανίζονται μόνο αγώνες που δεν έχουν ξεκινήσει. Η V103 επιλέγει αυτόματα την ισχυρότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG) και χρησιμοποιεί πιο συντηρητική βαθμονόμηση αξιοπιστίας.</div>
+      <div class="daily-bundle-note">Εμφανίζονται μόνο αγώνες που δεν έχουν ξεκινήσει. Η V104 επιλέγει αυτόματα την ισχυρότερη διαθέσιμη αγορά (1/Χ/2, διπλή ευκαιρία, Over/Under ή GG/NG) και χρησιμοποιεί πιο συντηρητική βαθμονόμηση αξιοπιστίας.</div>
     </section>
 
     <div class="search-wrap">
@@ -1723,6 +1729,7 @@
 
   <footer class="app-footer">
     by <strong>Merkourios Kermanidis</strong>
+    <img class="app-footer-icon" src="./icon-192.png" alt="MatchVisionAI">
   </footer>
 </div>
 
@@ -1960,7 +1967,7 @@ function clampConfidence(value,min=0,max=92){
 function calibrateMarketConfidence(value,kind="result"){
   const raw=clampConfidence(value,0,92);
   if(raw<=0) return 0;
-  // V103: συμπίεση των ακραίων τιμών ώστε το 90%+ να μην εμφανίζεται χωρίς πολύ ισχυρά δεδομένα.
+  // V104: συμπίεση των ακραίων τιμών ώστε το 90%+ να μην εμφανίζεται χωρίς πολύ ισχυρά δεδομένα.
   const compressed=raw<=55 ? raw : 55+(raw-55)*0.68;
   const caps={result:86,double:84,goals:83,btts:83,none:0};
   return clampConfidence(compressed,0,caps[kind] ?? 84);
@@ -5206,7 +5213,7 @@ function buildDailyModel(item,match){
   const completeness=Math.round(completenessInputs.filter(Number.isFinite).length/completenessInputs.length*100);
   const gap=[ph,pd,pa].sort((a,b)=>b-a)[0]-[ph,pd,pa].sort((a,b)=>b-a)[1];
 
-  // V103: επιλέγεται η ισχυρότερη τεκμηριωμένη αγορά με βαθμονομημένη αξιοπιστία.
+  // V104: επιλέγεται η ισχυρότερη τεκμηριωμένη αγορά με βαθμονομημένη αξιοπιστία.
   const modelConfidence=Math.round(
     Math.min(92,
       maxp*0.45 +
@@ -5295,7 +5302,7 @@ function isUpcomingDailyFixture(item){
   const kickoff=new Date(item.fixture?.date).getTime();
   if(!Number.isFinite(kickoff)) return false;
 
-  // V103: μόλις φτάσει η ώρα έναρξης, ο αγώνας παύει να θεωρείται επερχόμενος.
+  // V104: μόλις φτάσει η ώρα έναρξης, ο αγώνας παύει να θεωρείται επερχόμενος.
   return kickoff > Date.now();
 }
 
